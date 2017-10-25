@@ -1,7 +1,7 @@
 package com.bg.library.DataCenter;
 
-import com.bg.library.Base.Objects.*;
-import com.bg.library.Base.Objects.JError;
+import com.bg.library.Base.Objects.JSON.JError;
+import com.bg.library.Base.Objects.JSON.JSON;
 
 import org.json.JSONObject;
 

@@ -1,4 +1,4 @@
-package com.bg.library.Base.Objects;
+package com.bg.library.Base.Objects.JSON;
 
 /**
  * Created by BinGe on 2017/10/25.

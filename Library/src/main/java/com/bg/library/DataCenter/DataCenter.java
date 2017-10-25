@@ -4,7 +4,7 @@ package com.bg.library.DataCenter;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.bg.library.Base.Objects.JError;
+import com.bg.library.Base.Objects.JSON.JError;
 
 import java.util.ArrayList;
 import java.util.List;

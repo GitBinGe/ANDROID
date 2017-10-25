@@ -1,4 +1,6 @@
-package com.bg.library.Base.Objects;
+package com.bg.library.Base.Objects.JSON;
+
+import com.bg.library.Base.Objects.BaseObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
