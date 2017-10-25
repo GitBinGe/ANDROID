@@ -105,11 +105,7 @@ public class SystemInfo {
      * @return
      */
     private static String getAppFilesPath(Context context) {
-        String path = "/data/data/" + context.getPackageName() + "/files/";
-        File file = new File(path);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+        String path = context.getFilesDir().getAbsolutePath();
         return path;
     }
 
