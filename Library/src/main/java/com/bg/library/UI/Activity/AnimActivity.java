@@ -27,6 +27,12 @@ public class AnimActivity extends AppCompatActivity {
                     R.anim.activity_presentation_open_out,
                     R.anim.activity_presentation_close_in,
                     R.anim.activity_presentation_close_out
+            },
+            {
+                    R.anim.activity_alpha_in,
+                    R.anim.activity_presentation_open_out,
+                    R.anim.activity_alpha_out,
+                    R.anim.activity_presentation_close_out
             }
     };
 
