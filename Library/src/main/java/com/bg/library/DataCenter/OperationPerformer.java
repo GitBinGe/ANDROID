@@ -1,7 +1,6 @@
 package com.bg.library.DataCenter;
 
 
-import com.hetun.occult.DataCenter.DataCenter;
 
 /**
  * Created by BinGe on 2017/9/12.

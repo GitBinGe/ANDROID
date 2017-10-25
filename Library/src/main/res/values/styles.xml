@@ -47,8 +47,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowEnterAnimation">@anim/activity_alpha_in</item>
         <item name="android:windowExitAnimation">@null</item>
+        <item name="android:windowAnimationStyle">@style/AlphaAnimation</item>
     </style>
 
     <style name="share_dialog" parent="@style/action_sheet">

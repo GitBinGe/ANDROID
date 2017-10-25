@@ -1,10 +1,8 @@
 package com.bg.library;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.bg.library.Base.os.SystemInfo;
-import com.bg.library.Utils.Localize.Saver;
 
 /**
  * Created by BinGe on 2017/10/25.

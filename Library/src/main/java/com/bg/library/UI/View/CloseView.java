@@ -9,8 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.hetun.occult.UI.BaseClasses.View.Drawables.Shape.CloseDrawable;
-import com.hetun.occult.Utils.Log.LogUtils;
+import com.bg.library.UI.Drawable.CloseDrawable;
+
 
 /**
  * Created by BinGe on 2017/10/24.
@@ -39,7 +39,6 @@ public class CloseView extends View {
     @Override
     public void setBackgroundColor(@ColorInt int color) {
 //        super.setBackgroundColor(color);
-        LogUtils.d("background color : " + color);
     }
 
     @Override

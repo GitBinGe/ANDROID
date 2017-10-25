@@ -28,7 +28,7 @@ import com.bg.library.UI.Drawable.ShapeDrawable;
  * APP中能用的title
  */
 
-public class Title extends FrameLayout implements View.OnClickListener{
+public class TitleView extends FrameLayout implements View.OnClickListener{
 
     public class Unit {
         private static final int FIRST  = 0X0001;       //0000 0000 0000 0001
@@ -46,15 +46,15 @@ public class Title extends FrameLayout implements View.OnClickListener{
     private TextView mCloseView;//关闭按钮
     private TextView mMenuView;//菜单按钮
 
-    public Title(@NonNull Context context) {
+    public TitleView(@NonNull Context context) {
         this(context, null);
     }
 
-    public Title(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public TitleView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public Title(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public TitleView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
