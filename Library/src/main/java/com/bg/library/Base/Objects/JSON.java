@@ -60,6 +60,17 @@ public class JSON extends BaseObject {
         return false;
     }
 
+    public void put(String key, Object value) {
+        if (json == null) {
+            json = new JSONObject();
+        }
+        try {
+            json.put(key, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 判断数据是否包含key对应的数据
      * @param key

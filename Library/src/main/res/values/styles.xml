@@ -1,0 +1,79 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="LibraryTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/color_w</item>
+        <item name="colorPrimaryDark">@color/color_w</item>
+        <item name="colorAccent">@color/color_w</item>
+        <item name="android:windowBackground">@color/color_w</item>
+    </style>
+
+    <!--左右push动画主题-->
+    <style name="LibraryThemePush" parent="@style/LibraryTheme">
+        <item name="android:windowAnimationStyle">@style/PushAnimation</item>
+    </style>
+
+    <!--从底部压入动画主题-->
+    <style name="LibraryThemePresentation" parent="@style/LibraryTheme">
+        <item name="android:windowAnimationStyle">@style/PresentationAnimation</item>
+    </style>
+
+    <!--渐变动画主题-->
+    <style name="LibraryThemeAlpha" parent="@style/LibraryTheme">
+        <item name="android:windowAnimationStyle">@style/AlphaAnimation</item>
+    </style>
+
+    <style name="ThemePrimary" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/color_w</item>
+        <item name="colorPrimaryDark">@color/color_w</item>
+        <item name="colorAccent">@android:color/holo_red_light</item>
+    </style>
+
+    <style name="progress" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="action_sheet" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+
+    <style name="share_dialog" parent="@style/action_sheet">
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+
+
+    <!--Activity 动画样式-->
+    <!--左右推入-->
+    <style name="PushAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_push_open_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_push_open_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_push_close_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_push_close_out</item>
+    </style>
+    <!--底部向上-->
+    <style name="PresentationAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_presentation_open_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_presentation_close_out</item>
+    </style>
+    <!--渐变-->
+    <style name="AlphaAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_alpha_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_alpha_out</item>
+    </style>
+
+</resources>

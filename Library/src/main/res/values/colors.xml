@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorStroke">#FFCCCCCC</color>
+    <color name="colorMask">#66000000</color>
+
+    <color name="color_w">#ffffff</color>
+    <color name="color_b">#000000</color>
+
+    <color name="c000">#000000</color>
+    <color name="c333">#333333</color>
+    <color name="c666">#666666</color>
+    <color name="cAAA">#AAAAAA</color>
+    <color name="cCCC">#CCCCCC</color>
+    <color name="c898989">#898989</color>
+    <color name="c979797">#979797</color>
+    <color name="cC2C2C2">#C2C2C2</color>
+
+</resources>
