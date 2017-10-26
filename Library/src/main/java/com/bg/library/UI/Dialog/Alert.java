@@ -147,7 +147,11 @@ public class Alert extends BaseDialog {
                 LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 p1.weight = 1;
                 buttonLayout.addView(cancelView, p1);
-                cancelView.setOnClickListener(cancelListener);
+                if (cancelListener != null) {
+                    cancelView.setOnClickListener(cancelListener);
+                } else {
+                    cancelView.setOnClickListener(dissOnclickListener);
+                }
 
                 line = new View(getContext());
                 line.setBackgroundColor(Color.BLACK & 0x66ffffff);
@@ -163,13 +167,24 @@ public class Alert extends BaseDialog {
             sureView.setClickable(true);
             sureView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             sureView.setSingleLine();
-            sureView.setOnClickListener(sureListener);
+            if (sureListener != null) {
+                sureView.setOnClickListener(sureListener);
+            } else {
+                sureView.setOnClickListener(dissOnclickListener);
+            }
             LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             p1.weight = 1;
             buttonLayout.addView(sureView, p1);
 
 
         }
+
+        private View.OnClickListener dissOnclickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        };
 
 
         private Bitmap bitmap;
