@@ -17,68 +17,15 @@ import java.util.concurrent.Executors;
  * 数据中心，app中所有的数据都通过DataCenter请求或获取
  */
 
-public class DataCenter {
-
-    //*******************************************************************************************
-    //*******************************   数据中心对外接口  start  **********************************
-    //*******************************************************************************************
+public abstract class DataCenter {
 
     /**
-     * 调用{@link DataCenter#perform(String, Object, Callback)}时
+     * 调用{@link DataCenter#performOperation(String, Object, Callback)} 时
      * 如果需要数据回调，则实现这个接口等待回调
      */
     public interface Callback {
         void onCallback(String operation, Data data);
     }
-
-    /**
-     * 获取数据中心单例
-     */
-    public static DataCenter get() {
-        return getInstance();
-    }
-
-    /**
-     * 数据中心对外的数据接口，通过传入type返回相应的数据
-     *
-     * @param type {@link DataType}
-     */
-    public Data getData(DataType type) {
-        return getDataByDataType(type);
-    }
-
-    /**
-     * 执行一次操作
-     *
-     * @param operation
-     * @param params    请求对应的参数
-     */
-    public void perform(String operation, Object params, Callback callback) {
-        performOperation(operation, params, callback);
-    }
-
-    //*******************************************************************************************
-    //*******************************   数据中心对外接口  end    **********************************
-    //*******************************************************************************************
-
-
-    /**
-     * 数据中心单例变量
-     */
-    private static DataCenter sDataCenter;
-
-    /**
-     * 获取数据中心单例
-     *
-     * @return
-     */
-    private static DataCenter getInstance() {
-        if (sDataCenter == null) {
-            sDataCenter = new DataCenter();
-        }
-        return sDataCenter;
-    }
-
 
     /**
      * 用于任务的主线程和子线程的分发工作
@@ -98,12 +45,15 @@ public class DataCenter {
     private DataCenter() {
         mHandler = new Handler(Looper.getMainLooper());
         mThreadPool = Executors.newFixedThreadPool(3);
+        initDataHandlers(getOptionHandlers());
     }
+
+    public abstract List<Class<? extends DataHandler>> getOptionHandlers();
 
     /**
      * 初始化处理器
      */
-    public void initDataHandlers(List<Class<? extends DataHandler>> handlers) {
+    private void initDataHandlers(List<Class<? extends DataHandler>> handlers) {
         for (Class<? extends DataHandler> cls : handlers) {
             try {
                 DataHandler handler = cls.newInstance();
@@ -115,16 +65,12 @@ public class DataCenter {
 
     /**
      * 数据中心对外的数据接口，通过传入type返回相应的数据
-     *
-     * @param type
-     * @return
      */
-    private Data getDataByDataType(DataType type) {
-        Class<?> cls = type.handler;
-        if (cls != null) {
-            for (DataHandler handler : mOptionHandlers) {
-                if (handler.getClass() == cls) {
-                    return handler.getData();
+    protected Data getDataByHandler(Class<? extends DataHandler> handler) {
+        if (handler != null) {
+            for (DataHandler h : mOptionHandlers) {
+                if (h.getClass() == handler) {
+                    return h.getData();
                 }
             }
         }
