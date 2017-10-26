@@ -20,7 +20,6 @@ public abstract class Data extends JSON {
 
     /**
      * 数据初始化完成后会调用这个方法，供子类做一些初始化工作
-     * @param jsonData
      */
-    public abstract void onData(JSON jsonData);
+    public abstract void onData();
 }
