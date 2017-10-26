@@ -35,8 +35,8 @@ public class BaseDialog extends Dialog {
         return getContext().getResources().getDisplayMetrics();
     }
 
-    public float getDp(int value) {
-        return getDisplayMetrics().scaledDensity * value;
+    public int getDp(int value) {
+        return (int) (getDisplayMetrics().scaledDensity * value);
     }
 
     @Override

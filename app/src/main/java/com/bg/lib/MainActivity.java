@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.bg.library.UI.Dialog.ActionSheet;
+import com.bg.library.UI.Dialog.Alert;
 import com.bg.library.UI.Dialog.Progress;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,8 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
 //        Log.d("123", "123");
 
-        new Progress(this).show();
+//        new Progress(this).show();
 //                new Progress(this).show();
+
+//        Alert.show(this);
+
+        Alert alert = new Alert(this);
+        alert.setTitle("123")
+                .setContent("456")
+                .show();
 
 //        HTProgress.create(this, "123").setType(HTProgress.TYPE.LOADING).show();
 
