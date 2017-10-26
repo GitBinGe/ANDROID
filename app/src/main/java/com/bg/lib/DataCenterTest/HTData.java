@@ -9,4 +9,15 @@ import com.bg.library.DataCenter.Data;
  */
 
 public class HTData extends Data{
+
+
+    @Override
+    public boolean isDataNormal() {
+        return false;
+    }
+
+    @Override
+    public void onData() {
+
+    }
 }
