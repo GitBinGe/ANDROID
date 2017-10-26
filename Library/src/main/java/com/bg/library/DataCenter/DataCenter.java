@@ -42,13 +42,17 @@ public abstract class DataCenter {
     /**
      * 私有构造方法
      */
-    private DataCenter() {
+    protected DataCenter() {
         mHandler = new Handler(Looper.getMainLooper());
         mThreadPool = Executors.newFixedThreadPool(3);
         initDataHandlers(getOptionHandlers());
     }
 
-    public abstract List<Class<? extends DataHandler>> getOptionHandlers();
+    /**
+     * 返回需要初始化的Handler列表
+     * @return
+     */
+    public abstract ArrayList<Class<? extends DataHandler>> getOptionHandlers();
 
     /**
      * 初始化处理器
@@ -66,7 +70,7 @@ public abstract class DataCenter {
     /**
      * 数据中心对外的数据接口，通过传入type返回相应的数据
      */
-    protected Data getDataByHandler(Class<? extends DataHandler> handler) {
+    protected final Data getDataByHandler(Class<? extends DataHandler> handler) {
         if (handler != null) {
             for (DataHandler h : mOptionHandlers) {
                 if (h.getClass() == handler) {
@@ -83,7 +87,7 @@ public abstract class DataCenter {
      * @param operation
      * @param params    请求对应的参数
      */
-    private void performOperation(final String operation, final Object params, final Callback callback) {
+    protected final void performOperation(final String operation, final Object params, final Callback callback) {
         mThreadPool.execute(new Runnable() {
             @Override
             public void run() {
