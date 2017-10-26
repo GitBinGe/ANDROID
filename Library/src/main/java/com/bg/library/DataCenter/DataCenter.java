@@ -122,8 +122,7 @@ public abstract class DataCenter {
             }
         }
         //如果上面没有找到对应的操作处理器，则返回错误信息
-        Data data = new Data(new JError("<<<没有找到对应的OperationPerformer处理器，请确认处理器是否已绑定>>>"));
-        throw new RuntimeException(data.error.errorInfo);
+        throw new RuntimeException("<<<没有找到对应的OperationPerformer处理器，请确认处理器是否已绑定>>>");
     }
 
     private void handleData(final String operation, final Data data, final Callback callback) {
