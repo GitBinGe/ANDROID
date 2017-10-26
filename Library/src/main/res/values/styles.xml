@@ -56,6 +56,10 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="dialog_translucent" parent="@style/action_sheet">
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
 
 
     <!--Activity 动画样式-->
