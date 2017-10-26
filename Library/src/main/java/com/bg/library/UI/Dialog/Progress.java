@@ -14,63 +14,79 @@ import android.widget.FrameLayout;
 /**
  * Progress
  */
-public class Progress extends BaseDialog {
+public class Progress {
 
-    public Progress(@NonNull Context context) {
-        super(context, false);
+    private static ProgressDialog dialog;
+
+    public static void show(Context context) {
+        dismiss();
+        dialog = new ProgressDialog(context);
+        dialog.show();
     }
 
-    public void show() {
-        dismiss();
+    public static void dismiss() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
 
-        FrameLayout root = new FrameLayout(getContext()) {
+
+    static class ProgressDialog extends BaseDialog {
+        public ProgressDialog(@NonNull Context context) {
+            super(context, true);
+        }
+
+        public void show() {
+            dismiss();
+
+            FrameLayout root = new FrameLayout(getContext()) {
+                private Paint mPaint = new Paint();
+
+                @Override
+                protected void dispatchDraw(Canvas canvas) {
+                    mPaint.setAntiAlias(true);
+                    float radius = getDp(10);
+                    canvas.drawRoundRect(new RectF(0, 0, getWidth(), getHeight()), radius, radius, mPaint);
+                    super.dispatchDraw(canvas);
+                }
+            };
+            int width = (int) getDp(80);
+            Loading loading = new Loading(getContext());
+            root.addView(loading, width, width);
+            setContentView(root);
+            super.show();
+        }
+
+        class Loading extends View {
+
+            private RectF r = new RectF(0, 0, getDp(40), getDp(40));
             private Paint mPaint = new Paint();
+            private ValueAnimator animator;
+
+            public Loading(Context context) {
+                super(context);
+                mPaint = new Paint();
+                mPaint.setAntiAlias(true);
+                mPaint.setStrokeWidth(getDp(1));
+                mPaint.setStyle(Paint.Style.STROKE);
+                mPaint.setColor(Color.WHITE);
+
+                animator = ValueAnimator.ofInt(0, 359);
+                animator.setDuration(1000);
+                animator.setRepeatCount(-1);
+                animator.setInterpolator(new LinearInterpolator());
+                animator.start();
+            }
 
             @Override
-            protected void dispatchDraw(Canvas canvas) {
-                mPaint.setAntiAlias(true);
-                float radius = getDp(10);
-                canvas.drawRoundRect(new RectF(0, 0, getWidth(), getHeight()), radius, radius, mPaint);
-                super.dispatchDraw(canvas);
+            protected void onDraw(Canvas canvas) {
+                r.offsetTo(getWidth() / 2 - r.width() / 2, getHeight() / 2 - r.height() / 2);
+                canvas.drawArc(r, (int) animator.getAnimatedValue(), 320, false, mPaint);
+                invalidate();
             }
-        };
-        int width = (int) getDp(80);
-        Loading loading = new Loading(getContext());
-        root.addView(loading, width, width);
-        setContentView(root);
-        super.show();
-    }
 
 
-    class Loading extends View {
-
-        private RectF r = new RectF(0, 0, getDp(40), getDp(40));
-        private Paint mPaint = new Paint();
-        private ValueAnimator animator;
-
-        public Loading(Context context) {
-            super(context);
-            mPaint = new Paint();
-            mPaint.setAntiAlias(true);
-            mPaint.setStrokeWidth(getDp(1));
-            mPaint.setStyle(Paint.Style.STROKE);
-            mPaint.setColor(Color.WHITE);
-
-            animator = ValueAnimator.ofInt(0, 359);
-            animator.setDuration(1000);
-            animator.setRepeatCount(-1);
-            animator.setInterpolator(new LinearInterpolator());
-            animator.start();
         }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            r.offsetTo(getWidth() / 2 - r.width() / 2, getHeight() / 2 - r.height() / 2);
-            canvas.drawArc(r, (int) animator.getAnimatedValue(), 320, false, mPaint);
-            invalidate();
-        }
-
-
     }
 
 

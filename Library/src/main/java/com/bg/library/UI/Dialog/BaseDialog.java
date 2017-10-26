@@ -28,7 +28,7 @@ public class BaseDialog extends Dialog {
     }
 
     public BaseDialog(@NonNull Context context, boolean translucent) {
-        super(context, translucent ? R.style.dialog_translucent : R.style.share_dialog);
+        super(context, translucent ? R.style.dialog_translucent : R.style.action_sheet);
     }
 
     public DisplayMetrics getDisplayMetrics() {
