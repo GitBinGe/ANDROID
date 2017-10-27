@@ -27,12 +27,12 @@ public class JData extends JSON {
         super(object);
     }
 
-    public JData(JError error) {
+    public JData(JError responseError) {
         super();
-        setError(error);
+        setResponseError(responseError);
     }
 
-    public void setError(JError error) {
+    public void setResponseError(JError error) {
         this.responseError = error;
     }
 
