@@ -14,6 +14,8 @@ import com.bg.library.UI.Dialog.Alert;
 import com.bg.library.UI.Dialog.Progress;
 import com.bg.library.UI.Drawable.LoadingDrawable;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+//        Progress.show(this);
 
 //        Progress.Base object = Progress.create(this).setType(new Progress.Base());
 
@@ -67,6 +69,21 @@ public class MainActivity extends AppCompatActivity {
 //                .show();
 
 //        HTProgress.create(this, "123").setType(HTProgress.TYPE.LOADING).show();
+
+        ActionSheet as = new ActionSheet(this);
+        as.addItem("123");
+        as.addItem("456");
+        as.addItem("789");
+//        as.setTitle("456");
+        as.show();
+
+        new Thread() {
+            @Override
+            public void run() {
+                String url = "http://facility.kwaijian.com/Api/Client/mobileInterface/uploadImage";
+                File file = new File("");
+            }
+        }.start();
 
     }
 }

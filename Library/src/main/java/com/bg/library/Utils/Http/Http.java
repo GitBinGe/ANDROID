@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +19,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by BinGe on 2017/9/13.
@@ -197,4 +202,121 @@ public class Http {
         }
         return false;
     }
+
+
+    private static final String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
+    private static final String PREFIX = "--";
+    private static final String LINE_END = "\r\n";
+    private static final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+
+    private String uploadFile(File file, String fileKey, String uploadUrl, Map<String, String> param) {
+        String result;
+        try {
+            URL url = new URL(uploadUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(10000);
+            conn.setDoInput(true); // 允许输入流
+            conn.setDoOutput(true); // 允许输出流
+            conn.setUseCaches(false); // 不允许使用缓存
+            conn.setRequestMethod("POST"); // 请求方式
+            conn.setRequestProperty("Charset", "utf-8"); // 设置编码
+            conn.setRequestProperty("connection", "keep-alive");
+            conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
+            conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+
+            DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+            StringBuffer sb;
+            String params;
+
+            /***
+             * 以下是用于上传参数
+             */
+            if (param != null && param.size() > 0) {
+                Iterator<String> it = param.keySet().iterator();
+                while (it.hasNext()) {
+                    sb = null;
+                    sb = new StringBuffer();
+                    String key = it.next();
+                    String value = param.get(key);
+                    sb.append(PREFIX).append(BOUNDARY).append(LINE_END);
+                    sb.append("Content-Disposition: form-data; name=\"").append(key).append("\"").append(LINE_END).append(LINE_END);
+                    sb.append(value).append(LINE_END);
+                    params = sb.toString();
+                    Log.d("LogHttp:", key + "=" + params + "##");
+                    dos.write(params.getBytes());
+                    // dos.flush();
+                }
+            }
+
+            sb = null;
+            params = null;
+            sb = new StringBuffer();
+            /**
+             * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
+             * filename是文件的名字，包含后缀名的 比如:abc.png
+             */
+            sb.append(PREFIX).append(BOUNDARY).append(LINE_END);
+            sb.append("Content-Disposition:form-data; name=\"" + fileKey + "\"; filename=\"" + file.getName() + "\"" + LINE_END);
+            sb.append("Content-Type:image/pjpeg" + LINE_END); // 这里配置的Content-type很重要的 ，用于服务器端辨别文件的类型的
+            sb.append(LINE_END);
+            params = sb.toString();
+            sb = null;
+
+            Log.d("LogHttp:", file.getName() + "=" + params + "##");
+            dos.write(params.getBytes());
+            /**上传文件*/
+            InputStream is = new FileInputStream(file);
+//            if (onUploadProcessListener != null) {
+//                onUploadProcessListener.initUpload((int) file.length());
+//            }
+            byte[] bytes = new byte[1024];
+            int len = 0;
+            int curLen = 0;
+            while ((len = is.read(bytes)) != -1) {
+                curLen += len;
+                dos.write(bytes, 0, len);
+//                if (onUploadProcessListener != null) {
+//                    onUploadProcessListener.onUploadProcess(curLen);
+//                }
+            }
+            is.close();
+
+            dos.write(LINE_END.getBytes());
+            byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
+            dos.write(end_data);
+            dos.flush();
+            //
+            // dos.write(tempOutputStream.toByteArray());
+            /**
+             * 获取响应码 200=成功 当响应成功，获取响应的流
+             */
+            int res = conn.getResponseCode();
+//            UploadUtil.requestTime = (int) ((responseTime - requestTime) / 1000);
+            if (res == 200) {
+                Log.d("LogHttp:", "request success");
+                InputStream input = conn.getInputStream();
+                StringBuffer sb1 = new StringBuffer();
+                int ss;
+                while ((ss = input.read()) != -1) {
+                    sb1.append((char) ss);
+                }
+                result = sb1.toString();
+                Log.d("LogHttp:",  result);
+                return result;
+            } else {
+                Log.d("LogHttp:",  "上传失败：code=" + res);
+                return "上传失败：code=" + res;
+            }
+        } catch (MalformedURLException e) {
+            Log.d("LogHttp:", "上传失败：error=" + e.getMessage());
+            e.printStackTrace();
+            return "上传失败：error=" + e.getMessage();
+        } catch (IOException e) {
+            Log.d("LogHttp:", "上传失败：error=" + e.getMessage());
+            e.printStackTrace();
+            return "上传失败：error=" + e.getMessage();
+        }
+    }
+
 }
