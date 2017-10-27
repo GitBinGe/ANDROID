@@ -1,92 +1,85 @@
 package com.bg.library.UI.Dialog;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
-import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Progress
- * LooooG
+ * Created By LooooG.
  */
 public class Prompt {
 
-    private static PromptDialog dialog;
+    private static PromptToast dialogToast;
 
-    public static void show(Context context) {
-        dismiss();
-        dialog = new PromptDialog(context);
-        dialog.show();
-    }
-
-    public static void dismiss() {
-        if (dialog != null) {
-            dialog.dismiss();
+    public static void show(Context context, String prompt) {
+        if (dialogToast == null) {
+            dialogToast = new PromptToast(context);
         }
+        dialogToast.show(prompt);
     }
 
 
-    static class PromptDialog extends BaseDialog {
-        public PromptDialog(@NonNull Context context) {
-            super(context, true);
+    static class PromptToast {
+        private Context mContext;
+        private Toast toastStart;
+
+        public PromptToast(@NonNull Context context) {
+            mContext = context;
+            //Toast的初始化
+            toastStart = new Toast(getContext());
+            //获取屏幕高度
+            WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            int height = wm.getDefaultDisplay().getHeight();
+            //Toast的Y坐标是屏幕高度的1/3，不会出现不适配的问题
+            toastStart.setGravity(Gravity.TOP, 0, height / 2);
+            toastStart.setDuration(Toast.LENGTH_SHORT);
         }
 
-        public void show() {
-            dismiss();
+        public Context getContext() {
+            return mContext;
+        }
 
+        public int getDp(int value) {
+            return (int) getContext().getResources().getDisplayMetrics().scaledDensity * value;
+        }
+
+        public void show(String prompt) {
+            // root
             FrameLayout root = new FrameLayout(getContext()) {
                 private Paint mPaint = new Paint();
 
                 @Override
                 protected void dispatchDraw(Canvas canvas) {
                     mPaint.setAntiAlias(true);
-                    float radius = getDp(10);
+                    mPaint.setColor(0xCCBEBEBF);
+                    float radius = getHeight() / 2;
                     canvas.drawRoundRect(new RectF(0, 0, getWidth(), getHeight()), radius, radius, mPaint);
                     super.dispatchDraw(canvas);
                 }
             };
-            int width = getDp(80);
-            PromptView loading = new PromptView(getContext());
-            root.addView(loading, width, width);
-            setContentView(root);
-            super.show();
-        }
+            // text
+            TextView promptView = new TextView(getContext());
+            promptView.setText(prompt);
+            promptView.setSingleLine(true);
+            promptView.setTextColor(Color.BLACK);
+            promptView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            int padding = getDp(10);
+            promptView.setPadding(padding * 5, padding, padding * 5, padding);
+            root.addView(promptView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        class PromptView extends View {
-
-            private RectF r = new RectF(0, 0, getDp(40), getDp(40));
-            private Paint mPaint = new Paint();
-            private ValueAnimator animator;
-
-            public PromptView(Context context) {
-                super(context);
-                mPaint = new Paint();
-                mPaint.setAntiAlias(true);
-                mPaint.setStrokeWidth(getDp(1));
-                mPaint.setStyle(Paint.Style.STROKE);
-                mPaint.setColor(Color.WHITE);
-
-                animator = ValueAnimator.ofInt(0, 359);
-                animator.setDuration(1000);
-                animator.setRepeatCount(-1);
-                animator.setInterpolator(new LinearInterpolator());
-                animator.start();
-            }
-
-            @Override
-            protected void onDraw(Canvas canvas) {
-                r.offsetTo(getWidth() / 2 - r.width() / 2, getHeight() / 2 - r.height() / 2);
-                canvas.drawArc(r, (int) animator.getAnimatedValue(), 320, false, mPaint);
-                invalidate();
-            }
-
-
+            toastStart.setView(root);
+            toastStart.show();
         }
     }
 
