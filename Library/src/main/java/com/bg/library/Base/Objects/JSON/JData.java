@@ -36,7 +36,7 @@ public class JData extends JSON {
         this.responseError = error;
     }
 
-    public boolean isDataNormal() {
+    public boolean isResponseOK() {
         return this.responseError == null;
     }
 
