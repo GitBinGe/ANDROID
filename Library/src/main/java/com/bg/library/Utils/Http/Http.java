@@ -1,8 +1,13 @@
 package com.bg.library.Utils.Http;
 
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.Log;
 
+
+import com.bg.library.Base.Objects.JSON.JData;
+import com.bg.library.Base.Objects.JSON.JError;
+import com.bg.library.Utils.Image.ImageUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +24,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
@@ -32,13 +38,43 @@ public class Http {
 
     /**
      * Post服务请求
+     * @param requestUrl 请求地址
+     * @param params     请求参数
+     * @return
+     */
+    public static JData post(String requestUrl, Map<String, Object> params) {
+        return post(null, requestUrl, params);
+    }
+    public static JData post(String cookie, String requestUrl, Map<String, Object> params) {
+        StringBuffer requestParams = new StringBuffer();
+        if (params != null) {
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue().toString();
+                requestParams.append(key);
+                requestParams.append("=");
+                requestParams.append(value);
+                requestParams.append("&");
+            }
+            if (requestParams.length() > 0) {
+                requestParams.deleteCharAt(requestParams.length() - 1);
+            }
+        }
+        return post(cookie, requestUrl, requestParams.toString());
+    }
+
+    /**
+     * Post服务请求
      *
      * @param requestUrl 请求地址
      * @param params     请求参数
      * @return
      */
-    public static JSONObject post(String requestUrl, String params) {
-        JSONObject json = new JSONObject();
+    public static JData post(String requestUrl, String params) {
+        return post(null, requestUrl, params);
+    }
+    public static JData post(String cookie, String requestUrl, String params) {
+        JData data = new JData();
         try {
             //建立连接
             URL url = new URL(requestUrl);
@@ -49,14 +85,13 @@ public class Http {
             connection.setDoInput(true); //使用URL连接进行输入
             connection.setUseCaches(false); //忽略缓存
             connection.setRequestMethod("POST"); //设置URL请求方法
+            connection.setRequestProperty("Cookie", cookie);
 
             //设置请求属性
             byte[] requestStringBytes = params.getBytes(); //获取数据字节数据
             connection.setRequestProperty("Content-length", "" + requestStringBytes.length);
-//            connection.setRequestProperty("Content-Type", "application/octet-stream");
             connection.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
             connection.setRequestProperty("Charset", "UTF-8");
-
             connection.setConnectTimeout(8000);
             connection.setReadTimeout(8000);
 
@@ -64,6 +99,10 @@ public class Http {
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(requestStringBytes);
             outputStream.close();
+
+            //获取cookie
+            String cookieVal = connection.getHeaderField("Set-Cookie");
+            data.setCookies(cookieVal);
 
             //获取响应状态
             int responseCode = connection.getResponseCode();
@@ -78,21 +117,17 @@ public class Http {
                     buffer.append(readLine).append("\n");
                 }
                 responseReader.close();
-                json = new JSONObject(buffer.toString());
+                data.setJSONString(buffer.toString());
             } else {
-                json.put("status", "error");
-                json.put("message", "Unknown!");
-                json.put("url", requestUrl);
+                JError err = new JError(responseCode, connection.getResponseMessage(), requestUrl);
+                data.setError(err);
             }
+
         } catch (Exception e) {
-            try {
-                json.put("status", "error");
-                json.put("message", e.getMessage());
-                json.put("url", requestUrl);
-            } catch (JSONException e1) {
-            }
+            JError err = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), requestUrl);
+            data.setError(err);
         }
-        return json;
+        return data;
     }
 
     /**
@@ -139,6 +174,13 @@ public class Http {
         return null;
     }
 
+    /**
+     * 下载图片
+     *
+     * @param urlString
+     * @param toDir
+     * @return
+     */
     public static String downloadImage(String urlString, String toDir) {
         String name = urlString.replaceAll("[^(A-Za-z.)]", "");
         return downloadImage(urlString, toDir, name);
@@ -153,7 +195,7 @@ public class Http {
      */
     public static String downloadImage(String urlString, String toDir, String imageName) {
         File file = new File(toDir, imageName);
-        if (checkImage(file.getAbsolutePath())) {
+        if (ImageUtils.checkImage(file.getAbsolutePath())) {
             Log.d("library", "Http.downloadImage : 从缓存中获取图片");
             return file.getAbsolutePath();
         }
@@ -177,7 +219,7 @@ public class Http {
                 outStream.close();
                 is.close();
 
-                if (checkImage(file.getAbsolutePath())) {
+                if (ImageUtils.checkImage(file.getAbsolutePath())) {
                     Log.d("library", "Http.downloadImage : 从网络下载图片");
                     return file.getAbsolutePath();
                 }
@@ -191,25 +233,20 @@ public class Http {
         return null;
     }
 
-    private static boolean checkImage(String path) {
-        if (new File(path).exists()) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, options);
-            if (options.outWidth > 0 && options.outHeight > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    private static final String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
-    private static final String PREFIX = "--";
-    private static final String LINE_END = "\r\n";
-    private static final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
-
-    private String uploadFile(File file, String fileKey, String uploadUrl, Map<String, String> param) {
+    /**
+     * @param cookie
+     * @param file      要上传的文件
+     * @param fileKey   文件对应的key如：image，picture
+     * @param uploadUrl 上传的url地址
+     * @param param     附带的参数
+     * @return
+     */
+    public static JData uploadImage(String cookie, File file, String fileKey, String uploadUrl, Map<String, String> param) {
+        JData data = new JData();
+        final String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
+        final String PREFIX = "--";
+        final String LINE_END = "\r\n";
+        final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
         String result;
         try {
             URL url = new URL(uploadUrl);
@@ -224,61 +261,42 @@ public class Http {
             conn.setRequestProperty("connection", "keep-alive");
             conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
             conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+            if (!TextUtils.isEmpty(cookie)) {
+                conn.setRequestProperty("Cookie", cookie);
+            }
 
             DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
-            StringBuffer sb;
-            String params;
-
-            /***
-             * 以下是用于上传参数
-             */
+            //以下是用于上传参数
             if (param != null && param.size() > 0) {
                 Iterator<String> it = param.keySet().iterator();
                 while (it.hasNext()) {
-                    sb = null;
-                    sb = new StringBuffer();
+                    StringBuffer sb = new StringBuffer();
                     String key = it.next();
                     String value = param.get(key);
                     sb.append(PREFIX).append(BOUNDARY).append(LINE_END);
                     sb.append("Content-Disposition: form-data; name=\"").append(key).append("\"").append(LINE_END).append(LINE_END);
                     sb.append(value).append(LINE_END);
-                    params = sb.toString();
-                    Log.d("LogHttp:", key + "=" + params + "##");
-                    dos.write(params.getBytes());
-                    // dos.flush();
+                    dos.write(sb.toString().getBytes());
                 }
             }
-
-            sb = null;
-            params = null;
-            sb = new StringBuffer();
             /**
              * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
              * filename是文件的名字，包含后缀名的 比如:abc.png
              */
+            StringBuffer sb = new StringBuffer();
             sb.append(PREFIX).append(BOUNDARY).append(LINE_END);
             sb.append("Content-Disposition:form-data; name=\"" + fileKey + "\"; filename=\"" + file.getName() + "\"" + LINE_END);
-            sb.append("Content-Type:image/pjpeg" + LINE_END); // 这里配置的Content-type很重要的 ，用于服务器端辨别文件的类型的
+            sb.append("Content-Type:image/jpeg" + LINE_END); // 这里配置的Content-type很重要的 ，用于服务器端辨别文件的类型的
             sb.append(LINE_END);
-            params = sb.toString();
-            sb = null;
-
-            Log.d("LogHttp:", file.getName() + "=" + params + "##");
-            dos.write(params.getBytes());
+            dos.write(sb.toString().getBytes());
             /**上传文件*/
             InputStream is = new FileInputStream(file);
-//            if (onUploadProcessListener != null) {
-//                onUploadProcessListener.initUpload((int) file.length());
-//            }
             byte[] bytes = new byte[1024];
-            int len = 0;
+            int len;
             int curLen = 0;
             while ((len = is.read(bytes)) != -1) {
                 curLen += len;
                 dos.write(bytes, 0, len);
-//                if (onUploadProcessListener != null) {
-//                    onUploadProcessListener.onUploadProcess(curLen);
-//                }
             }
             is.close();
 
@@ -286,15 +304,13 @@ public class Http {
             byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
             dos.write(end_data);
             dos.flush();
-            //
-            // dos.write(tempOutputStream.toByteArray());
-            /**
-             * 获取响应码 200=成功 当响应成功，获取响应的流
-             */
+
+            //获取cookie
+            String cookieVal = conn.getHeaderField("Set-Cookie");
+            data.setCookies(cookieVal);
+
             int res = conn.getResponseCode();
-//            UploadUtil.requestTime = (int) ((responseTime - requestTime) / 1000);
             if (res == 200) {
-                Log.d("LogHttp:", "request success");
                 InputStream input = conn.getInputStream();
                 StringBuffer sb1 = new StringBuffer();
                 int ss;
@@ -302,21 +318,16 @@ public class Http {
                     sb1.append((char) ss);
                 }
                 result = sb1.toString();
-                Log.d("LogHttp:",  result);
-                return result;
+                data.setJSONString(result);
             } else {
-                Log.d("LogHttp:",  "上传失败：code=" + res);
-                return "上传失败：code=" + res;
+                JError err = new JError(res, conn.getResponseMessage(), uploadUrl);
+                data.setError(err);
             }
-        } catch (MalformedURLException e) {
-            Log.d("LogHttp:", "上传失败：error=" + e.getMessage());
-            e.printStackTrace();
-            return "上传失败：error=" + e.getMessage();
-        } catch (IOException e) {
-            Log.d("LogHttp:", "上传失败：error=" + e.getMessage());
-            e.printStackTrace();
-            return "上传失败：error=" + e.getMessage();
+        } catch (Exception e) {
+            JError err = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), uploadUrl);
+            data.setError(err);
         }
+        return data;
     }
 
 }

@@ -23,26 +23,19 @@ public class JError extends BaseObject {
      * 错误提示，可用于显示错误提示能用户看
      */
     public String errorInfo;
+    /**
+     * 错误对应的url
+     */
+    public String url;
 
-    public JError() {
-        this(JError.DEFAULT_ERROR_CODE);
-    }
-
-    public JError(String info) {
-        this(DEFAULT_ERROR_CODE, info);
-    }
-
-    public JError(int errorCode) {
-        this(errorCode, null);
-    }
-
-    public JError(int errorCode, String errorInfo) {
+    public JError(int errorCode, String errorInfo, String url) {
         this.errorCode = errorCode;
         this.errorInfo = errorInfo;
+        this.url = url;
     }
 
     @Override
     public String toString() {
-        return "errorCode: " + this.errorCode + ", errorInfo: " + this.errorInfo;
+        return "errorCode: " + this.errorCode + ", errorInfo: " + this.errorInfo +"\n"+this.url;
     }
 }
