@@ -1,5 +1,6 @@
 package com.bg.library.DataCenter;
 
+import com.bg.library.Base.Objects.JSON.JData;
 import com.bg.library.Base.Objects.JSON.JError;
 import com.bg.library.Base.Objects.JSON.JSON;
 
@@ -10,7 +11,7 @@ import org.json.JSONObject;
  * 此类为数据中心所有数据的基本类型
  */
 
-public abstract class Data extends JSON {
+public abstract class Data extends JData{
 
     /**
      * 判断数据是否正常
