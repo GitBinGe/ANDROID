@@ -120,12 +120,12 @@ public class Http {
                 data.setJSONString(buffer.toString());
             } else {
                 JError err = new JError(responseCode, connection.getResponseMessage(), requestUrl);
-                data.setError(err);
+                data.setResponseError(err);
             }
 
         } catch (Exception e) {
             JError err = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), requestUrl);
-            data.setError(err);
+            data.setResponseError(err);
         }
         return data;
     }
@@ -321,11 +321,11 @@ public class Http {
                 data.setJSONString(result);
             } else {
                 JError err = new JError(res, conn.getResponseMessage(), uploadUrl);
-                data.setError(err);
+                data.setResponseError(err);
             }
         } catch (Exception e) {
             JError err = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), uploadUrl);
-            data.setError(err);
+            data.setResponseError(err);
         }
         return data;
     }
