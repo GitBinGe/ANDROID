@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntRange;
@@ -18,6 +19,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 
+import com.bg.library.UI.Animation.ValueAnimation;
+
 /**
  * Created by BinGe on 2017/9/26.
  * loading的背景效果
@@ -26,7 +29,7 @@ import android.view.animation.LinearInterpolator;
 public class LoadingDrawable extends ShapeDrawable {
 
     private RectF rect = new RectF();
-    private ValueAnimator animator;
+    private ValueAnimation animator;
     private Paint mPaint = new Paint();
 
     public LoadingDrawable(Context context) {
@@ -40,24 +43,18 @@ public class LoadingDrawable extends ShapeDrawable {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
 
-        animator = ValueAnimator.ofInt(0, 359);
-        animator.setDuration(1000);
+        animator = new ValueAnimation(1000);
         animator.setRepeatCount(-1);
-        animator.setInterpolator(new LinearInterpolator());
         animator.start();
     }
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        Log.d("loading", canvas.getWidth()+":"+canvas.getHeight());
         rect.offsetTo(canvas.getWidth() / 2 - rect.width() / 2, canvas.getHeight() / 2 - rect.height() / 2);
-        mPaint.setColor(Color.GREEN);
-
-        canvas.drawRect(rect, mPaint);
-        Log.d("loading",rect.toString());
-//        canvas.drawArc(rect, (int) animator.getAnimatedValue(), 320, false, mPaint);
-//        invalidateSelf();
+        canvas.drawArc(rect, animator.getValue() * 359, 320, false, mPaint);
+        invalidateSelf();
     }
+
 
     @Override
     public Paint getPaint() {
