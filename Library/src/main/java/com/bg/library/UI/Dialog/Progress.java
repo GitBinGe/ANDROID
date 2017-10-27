@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 
+import com.bg.library.UI.Animation.ValueAnimation;
+
 /**
  * Progress
  */
@@ -61,7 +63,7 @@ public class Progress {
 
             private RectF r = new RectF(0, 0, getDp(40), getDp(40));
             private Paint mPaint = new Paint();
-            private ValueAnimator animator;
+            private ValueAnimation animator;
 
             public Loading(Context context) {
                 super(context);
@@ -71,17 +73,15 @@ public class Progress {
                 mPaint.setStyle(Paint.Style.STROKE);
                 mPaint.setColor(Color.WHITE);
 
-                animator = ValueAnimator.ofInt(0, 359);
-                animator.setDuration(1000);
+                animator = new ValueAnimation(1000);
                 animator.setRepeatCount(-1);
-                animator.setInterpolator(new LinearInterpolator());
                 animator.start();
             }
 
             @Override
             protected void onDraw(Canvas canvas) {
                 r.offsetTo(getWidth() / 2 - r.width() / 2, getHeight() / 2 - r.height() / 2);
-                canvas.drawArc(r, (int) animator.getAnimatedValue(), 320, false, mPaint);
+                canvas.drawArc(r, animator.getValue() * 359, 320, false, mPaint);
                 invalidate();
             }
 

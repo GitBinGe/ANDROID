@@ -30,7 +30,7 @@ import com.bg.library.R;
 /**
  * ActionSheet
  */
-public class ActionSheet extends Dialog implements View.OnClickListener {
+public class ActionSheet extends BaseDialog implements View.OnClickListener {
 
     private LinearLayout mRootView;
     private LinearLayout mContentLayout;//存放title和item
@@ -40,8 +40,7 @@ public class ActionSheet extends Dialog implements View.OnClickListener {
     private OnItemClickListener mOnItemClickListener;
 
     public ActionSheet(Context context) {
-        super(context,R.style.action_sheet);
-
+        super(context,false);
         Window window = getWindow();
         window.getDecorView().setPadding(0, 0, 0, 0);
         WindowManager.LayoutParams attributes = window.getAttributes();
@@ -151,7 +150,7 @@ public class ActionSheet extends Dialog implements View.OnClickListener {
         mItemLayout.addView(itemLayout, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        if (mItemLayout.getChildCount() > 0 || mTitleView.getVisibility() == View.VISIBLE) {
+        if (mItemLayout.getChildCount() > 1 || mTitleView.getVisibility() == View.VISIBLE) {
             View view = new View(getContext());
             LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             viewParams.height = (int) (getContext().getResources().getDisplayMetrics().scaledDensity * 0.5);
