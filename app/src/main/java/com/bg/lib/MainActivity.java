@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(imageView);
 
 
+
+
+
 //        Progress.Base object = Progress.create(this).setType(new Progress.Base());
 
 //        Log.d("123", "123");
