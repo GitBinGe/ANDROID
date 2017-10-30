@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 /**
  * Created by BinGe on 2017/10/25.
+ * 封闭HTTP工具返回的数据结构，包含了cookies和返回的错误信息
  */
 
 public class JData extends JSON {

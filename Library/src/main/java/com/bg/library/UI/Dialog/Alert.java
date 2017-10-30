@@ -79,9 +79,9 @@ public class Alert extends BaseDialog {
                            String title,
                            String content,
                            String cancel,
-                           OnClickListener cancelListener,
+                           final OnClickListener cancelListener,
                            String sure,
-                           OnClickListener sureListener) {
+                           final OnClickListener sureListener) {
             super(context);
 
 //            setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -147,12 +147,15 @@ public class Alert extends BaseDialog {
                 LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 p1.weight = 1;
                 buttonLayout.addView(cancelView, p1);
-                if (cancelListener != null) {
-                    cancelView.setOnClickListener(cancelListener);
-                } else {
-                    cancelView.setOnClickListener(dissOnclickListener);
-                }
-
+                cancelView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cancelListener != null) {
+                            cancelListener.onClick(v);
+                        }
+                        dismiss();
+                    }
+                });
                 line = new View(getContext());
                 line.setBackgroundColor(Color.BLACK & 0x66ffffff);
                 buttonLayout.addView(line, getDp(1) / 2, LayoutParams.MATCH_PARENT);
@@ -167,11 +170,15 @@ public class Alert extends BaseDialog {
             sureView.setClickable(true);
             sureView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             sureView.setSingleLine();
-            if (sureListener != null) {
-                sureView.setOnClickListener(sureListener);
-            } else {
-                sureView.setOnClickListener(dissOnclickListener);
-            }
+            sureView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (sureListener != null) {
+                        sureListener.onClick(v);
+                    }
+                    dismiss();
+                }
+            });
             LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             p1.weight = 1;
             buttonLayout.addView(sureView, p1);
