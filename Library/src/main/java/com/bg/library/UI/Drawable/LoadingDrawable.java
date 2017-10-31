@@ -50,6 +50,9 @@ public class LoadingDrawable extends ShapeDrawable {
 
     @Override
     public void draw(@NonNull Canvas canvas) {
+        float r1 = Math.min(canvas.getHeight(), canvas.getHeight()) - mPaint.getStrokeWidth();
+        float r2 = Math.min(r1, rect.width());
+        rect.set(0, 0, r2, r2);
         rect.offsetTo(canvas.getWidth() / 2 - rect.width() / 2, canvas.getHeight() / 2 - rect.height() / 2);
         canvas.drawArc(rect, animator.getValue() * 359, 320, false, mPaint);
         invalidateSelf();
