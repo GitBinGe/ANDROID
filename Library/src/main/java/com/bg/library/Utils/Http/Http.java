@@ -1,6 +1,5 @@
 package com.bg.library.Utils.Http;
 
-import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -8,9 +7,6 @@ import android.util.Log;
 import com.bg.library.Base.Objects.JSON.JData;
 import com.bg.library.Base.Objects.JSON.JError;
 import com.bg.library.Utils.Image.ImageUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -24,7 +20,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
@@ -120,12 +115,12 @@ public class Http {
                 data.setJSONString(buffer.toString());
             } else {
                 JError err = new JError(responseCode, connection.getResponseMessage(), requestUrl);
-                data.setResponseError(err);
+                data.setJDataError(err);
             }
 
         } catch (Exception e) {
             JError err = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), requestUrl);
-            data.setResponseError(err);
+            data.setJDataError(err);
         }
         return data;
     }
@@ -321,11 +316,11 @@ public class Http {
                 data.setJSONString(result);
             } else {
                 JError err = new JError(res, conn.getResponseMessage(), uploadUrl);
-                data.setResponseError(err);
+                data.setJDataError(err);
             }
         } catch (Exception e) {
             JError err = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), uploadUrl);
-            data.setResponseError(err);
+            data.setJDataError(err);
         }
         return data;
     }

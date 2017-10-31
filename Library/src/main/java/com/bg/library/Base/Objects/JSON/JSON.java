@@ -22,7 +22,7 @@ public class JSON extends BaseObject {
     private JSONObject json;
 
     public JSON() {
-
+        setJSONObject(null);
     }
 
     public JSON(String jsonString) {
@@ -33,17 +33,23 @@ public class JSON extends BaseObject {
         setJSONObject(jsonObject);
     }
 
+    public JSON(JSON json) {
+        setJSONObject(json == null ? null : json.getJSONObject());
+    }
+
     /**
      * 通过字符串类型的json数据初始化
+     *
      * @param jsonString
      * @return
      */
-    public boolean setJSONString(String jsonString) {
+    public final boolean setJSONString(String jsonString) {
         if (jsonString != null) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonString);
                 return setJSONObject(jsonObject);
             } catch (JSONException e) {
+                setJSONObject(null);
             }
         }
         return false;
@@ -51,16 +57,23 @@ public class JSON extends BaseObject {
 
     /**
      * 通过json数据初始化
+     *
      * @param jsonObject
      * @return
      */
-    public boolean setJSONObject(JSONObject jsonObject) {
-        if (jsonObject != null) {
-            this.json = jsonObject;
-            return true;
-        }
-        return false;
+    public final boolean setJSONObject(JSONObject jsonObject) {
+        this.json = jsonObject;
+        onJSONRefresh();
+        return this.json != null;
     }
+
+    /**
+     * json数据改变时调用
+     */
+    public void onJSONRefresh() {
+
+    }
+
 
     public void put(String key, Object value) {
         if (json == null) {
@@ -68,13 +81,21 @@ public class JSON extends BaseObject {
         }
         try {
             json.put(key, value);
+            onJSONRefresh();
         } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
     /**
+     * 判断数据是否为空
+     */
+    public boolean isJSONEmpty() {
+        return json == null || json.toString().equals("{}");
+    }
+
+    /**
      * 判断数据是否包含key对应的数据
+     *
      * @param key
      * @return
      */
@@ -84,12 +105,14 @@ public class JSON extends BaseObject {
 
     /**
      * 返回key对应的String类型值
+     *
      * @param key
      * @return
      */
     public String stringByKey(String key) {
         return stringByKey(key, null);
     }
+
     public String stringByKey(String key, String defaultValue) {
         try {
             return this.json.getString(key);
@@ -100,12 +123,14 @@ public class JSON extends BaseObject {
 
     /**
      * 返回key对应的int类型值
+     *
      * @param key
      * @return
      */
     public int integerByKey(String key) {
         return integerByKey(key, -1);
     }
+
     public int integerByKey(String key, int defaultValue) {
         try {
             return this.json.getInt(key);
@@ -116,12 +141,14 @@ public class JSON extends BaseObject {
 
     /**
      * 返回key对应的long类型值
+     *
      * @param key
      * @return
      */
     public long longByKey(String key) {
         return longByKey(key, -1);
     }
+
     public long longByKey(String key, long defaultValue) {
         try {
             return this.json.getLong(key);
@@ -132,12 +159,14 @@ public class JSON extends BaseObject {
 
     /**
      * 返回key对应的boolean类型值
+     *
      * @param key
      * @return
      */
     public boolean booleanByKey(String key) {
         return booleanByKey(key, false);
     }
+
     public boolean booleanByKey(String key, boolean defaultValue) {
         try {
             return this.json.getBoolean(key);
@@ -148,6 +177,7 @@ public class JSON extends BaseObject {
 
     /**
      * 返回key对应的JSONObject对像
+     *
      * @param key
      * @return
      */
@@ -161,6 +191,7 @@ public class JSON extends BaseObject {
 
     /**
      * 返回key对应的JSONArray对像
+     *
      * @param key
      * @return
      */
@@ -174,6 +205,7 @@ public class JSON extends BaseObject {
 
     /**
      * 返回key对应的字符串数组对像
+     *
      * @param key
      * @return
      */

@@ -12,7 +12,7 @@ public class JData extends JSON {
     /**
      * 主要是记录非服务器错误信息的日志，如网络出错，IO错误等信息
      */
-    private JError responseError;
+    private JError jDataError;
 
     private String cookies;
 
@@ -24,25 +24,33 @@ public class JData extends JSON {
         super(jsonString);
     }
 
-    public JData(JSONObject object) {
-        super(object);
+    public JData(JSONObject jsonObject) {
+        super(jsonObject);
     }
 
-    public JData(JError responseError) {
-        super();
-        setResponseError(responseError);
+    public JData(JSON json) {
+        super(json);
     }
 
-    public void setResponseError(JError error) {
-        this.responseError = error;
+    @Override
+    public void onJSONRefresh() {
+        if (isJSONEmpty()) {
+            jDataError = new JError(JError.DEFAULT_ERROR_CODE, "空JSON数据", null);
+        } else {
+            jDataError = null;
+        }
     }
 
-    public boolean isResponseOK() {
-        return this.responseError == null;
+    public void setJDataError(JError error) {
+        this.jDataError = error;
     }
 
-    public JError getResponseError() {
-        return responseError;
+    public boolean isJDataOK() {
+        return this.jDataError == null && isJSONEmpty();
+    }
+
+    public JError getJDataError() {
+        return jDataError;
     }
 
     public void setCookies(String cookies) {
