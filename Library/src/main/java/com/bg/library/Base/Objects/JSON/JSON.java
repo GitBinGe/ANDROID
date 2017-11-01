@@ -189,6 +189,18 @@ public class JSON extends BaseObject {
         }
     }
 
+    public JSON JSONByKey(String key) {
+        try {
+            JSONObject jsonObject = this.json.getJSONObject(key);
+            if (jsonObject != null) {
+                return new JSON(jsonObject);
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+
     /**
      * 返回key对应的JSONArray对像
      *
@@ -230,6 +242,7 @@ public class JSON extends BaseObject {
 
     /**
      * 生成一个JSONObject数据
+     *
      * @param args key,value,key,value...
      * @return
      */
@@ -251,6 +264,7 @@ public class JSON extends BaseObject {
 
     /**
      * JSONArray 转 ArrayList
+     *
      * @param arr
      * @return
      */
