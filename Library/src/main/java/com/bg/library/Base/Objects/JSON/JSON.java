@@ -189,11 +189,65 @@ public class JSON extends BaseObject {
         }
     }
 
+    /**
+     * 获取JSON数据
+     *
+     * @param key
+     * @return
+     */
     public JSON getJSON(String key) {
         try {
             JSONObject jsonObject = this.json.getJSONObject(key);
             if (jsonObject != null) {
                 return new JSON(jsonObject);
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    /**
+     * 获取列表数据,只获取数组中的json结构数据，string或int会过滤掉
+     *
+     * @param key
+     * @return
+     */
+    public List<JSON> getJSONList(String key) {
+        try {
+            JSONArray array = this.json.getJSONArray(key);
+            if (array != null) {
+                List<JSON> jsonList = new ArrayList<>();
+                for (int i = 0; i < array.length(); i++) {
+                    try {
+                        jsonList.add(new JSON(array.getJSONObject(i)));
+                    } catch (Exception e) {
+                    }
+                }
+                return jsonList;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    /**
+     * 获取String列表数据,可以获取JSONArray的所有数据
+     *
+     * @param key
+     * @return
+     */
+    public List<String> getStringList(String key) {
+        try {
+            JSONArray array = this.json.getJSONArray(key);
+            if (array != null) {
+                List<String> jsonList = new ArrayList<>();
+                for (int i = 0; i < array.length(); i++) {
+                    try {
+                        jsonList.add(array.getString(i));
+                    } catch (Exception e) {
+                    }
+                }
+                return jsonList;
             }
         } catch (Exception e) {
         }
@@ -248,8 +302,8 @@ public class JSON extends BaseObject {
      * @param arr
      * @return
      */
-    public static ArrayList<JSON> toList(JSONArray arr) {
-        ArrayList<JSON> list = new ArrayList<>();
+    public static List<JSON> toList(JSONArray arr) {
+        List<JSON> list = new ArrayList<>();
         try {
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject jsonObject = arr.getJSONObject(i);
