@@ -1,6 +1,8 @@
 package com.bg.library.UI.Animation;
 
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
+import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 /**
@@ -13,7 +15,7 @@ public class ValueAnimation {
 
     public ValueAnimation(long duration) {
         animator.setDuration(duration);
-        animator.setInterpolator(new LinearInterpolator());
+        setInterpolator(new LinearInterpolator());
     }
 
     public void setRepeatCount(int count) {
@@ -22,6 +24,14 @@ public class ValueAnimation {
 
     public void start() {
         animator.start();
+    }
+
+    public void setInterpolator(Interpolator value) {
+        animator.setInterpolator(value);
+    }
+
+    public void addUpdateListener(ValueAnimator.AnimatorListener listener) {
+        animator.addListener(listener);
     }
 
     public float getValue() {
