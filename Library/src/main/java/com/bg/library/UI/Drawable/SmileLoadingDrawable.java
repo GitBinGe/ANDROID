@@ -2,19 +2,14 @@ package com.bg.library.UI.Drawable;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
 
-import com.bg.library.UI.Animation.SmileInterpolator;
+import com.bg.library.UI.Animation.CosInterpolator;
 import com.bg.library.UI.Animation.ValueAnimation;
 
 /**
@@ -54,7 +49,7 @@ public class SmileLoadingDrawable extends ShapeDrawable {
         mPaint.setStyle(Paint.Style.STROKE);
 
         animator = new ValueAnimation(1500);
-        animator.setInterpolator(new SmileInterpolator());
+        animator.setInterpolator(new CosInterpolator(0.5f));
         animator.setRepeatCount(1);
         animator.addUpdateListener(new AnimatorListenerAdapter() {
             @Override
