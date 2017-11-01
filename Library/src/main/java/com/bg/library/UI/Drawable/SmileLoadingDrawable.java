@@ -39,7 +39,7 @@ public class SmileLoadingDrawable extends ShapeDrawable {
 
     public SmileLoadingDrawable(Context context) {
         super(context);
-        float width = getDensityScale() * 36;
+        float width = getDensityScale() * 25;
         rect.set(0, 0, width, width);
 
         leftEyeAngle = 240;

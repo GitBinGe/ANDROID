@@ -35,7 +35,8 @@ public class HTData extends AData {
     }
 
     @Override
-    public void onData() {
+    public void onDataRefresh() {
 
     }
+
 }

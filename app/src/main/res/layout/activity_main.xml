@@ -18,11 +18,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <com.bg.library.UI.View.LoadingView
+        <com.bg.library.UI.View.SmileLoadingView
             android:id="@+id/loading"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:background="@android:color/holo_red_light"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:visibility="visible" />
     </FrameLayout>
 
