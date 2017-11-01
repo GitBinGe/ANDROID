@@ -6,7 +6,7 @@ package com.bg.library.DataCenter;
 
 public class DataType {
 
-    public Class<? extends DataHandler> handler;
+    public Class<? extends ADataHandler> handler;
 
 
 

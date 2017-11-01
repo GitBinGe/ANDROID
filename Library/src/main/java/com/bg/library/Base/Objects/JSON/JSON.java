@@ -34,7 +34,7 @@ public class JSON extends BaseObject {
     }
 
     public JSON(JSON json) {
-        setJSONObject(json == null ? null : json.getSource());
+        setJSON(json);
     }
 
     /**
@@ -43,16 +43,30 @@ public class JSON extends BaseObject {
      * @param jsonString
      * @return
      */
-    public final boolean setJSONString(String jsonString) {
+    public final JSON setJSONString(String jsonString) {
         if (jsonString != null) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonString);
-                return setJSONObject(jsonObject);
+                setJSONObject(jsonObject);
             } catch (JSONException e) {
                 setJSONObject(null);
             }
         }
-        return false;
+        return this;
+    }
+
+    /**
+     * 通过JSON类型的数据初始化
+     *
+     * @param json
+     * @return
+     */
+    public final JSON setJSON(JSON json) {
+        try {
+            setJSONObject(json.getSource());
+        } catch (Exception e) {
+        }
+        return this;
     }
 
     /**
@@ -61,10 +75,10 @@ public class JSON extends BaseObject {
      * @param jsonObject
      * @return
      */
-    public final boolean setJSONObject(JSONObject jsonObject) {
+    public final JSON setJSONObject(JSONObject jsonObject) {
         this.json = jsonObject;
         onJSONRefresh();
-        return this.json != null;
+        return this;
     }
 
     /**

@@ -33,12 +33,17 @@ public class JData extends JSON {
     }
 
     @Override
-    public void onJSONRefresh() {
+    public final void onJSONRefresh() {
         if (isJSONEmpty()) {
             jDataError = new JError(JError.DEFAULT_ERROR_CODE, "空JSON数据", null);
         } else {
             jDataError = null;
         }
+        onJDataRefresh();
+    }
+
+    public void onJDataRefresh() {
+
     }
 
     public void setJDataError(JError error) {

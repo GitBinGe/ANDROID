@@ -1,12 +1,12 @@
 package com.bg.lib.DataCenterTest;
 
-import com.bg.library.DataCenter.DataHandler;
+import com.bg.library.DataCenter.ADataHandler;
 
 /**
  * Created by BinGe on 2017/10/24.
  */
 
-public class GlobalHandler extends DataHandler {
+public class GlobalHandler extends ADataHandler {
 
     public GlobalHandler() {
     }

@@ -13,9 +13,10 @@ import java.util.concurrent.Executors;
 /**
  * Created by BinGe on 2017/8/31.
  * 数据中心，app中所有的数据都通过DataCenter请求或获取
+ * 前面的A表示这个类为抽象类
  */
 
-public abstract class DataCenter {
+public abstract class ADataCenter {
 
     /**
      * 用于任务的主线程和子线程的分发工作
@@ -27,12 +28,12 @@ public abstract class DataCenter {
     /**
      * 用户操作处理器数组
      */
-    private List<DataHandler> mOptionHandlers = new ArrayList<>();
+    private List<ADataHandler> mOptionHandlers = new ArrayList<>();
 
     /**
      * 私有构造方法
      */
-    protected DataCenter() {
+    protected ADataCenter() {
         mHandler = new Handler(Looper.getMainLooper());
         mThreadPool = Executors.newFixedThreadPool(3);
         initDataHandlers(getOptionHandlers());
@@ -47,15 +48,15 @@ public abstract class DataCenter {
      * 返回需要初始化的Handler列表
      * @return
      */
-    public abstract ArrayList<Class<? extends DataHandler>> getOptionHandlers();
+    public abstract ArrayList<Class<? extends ADataHandler>> getOptionHandlers();
 
     /**
      * 初始化处理器
      */
-    private void initDataHandlers(List<Class<? extends DataHandler>> handlers) {
-        for (Class<? extends DataHandler> cls : handlers) {
+    private void initDataHandlers(List<Class<? extends ADataHandler>> handlers) {
+        for (Class<? extends ADataHandler> cls : handlers) {
             try {
-                DataHandler handler = cls.newInstance();
+                ADataHandler handler = cls.newInstance();
                 mOptionHandlers.add(handler);
             } catch (Exception e) {
             }
@@ -65,9 +66,9 @@ public abstract class DataCenter {
     /**
      * 数据中心对外的数据接口，通过传入type返回相应的数据
      */
-    protected final Data getDataByHandler(Class<? extends DataHandler> handler) {
+    protected final AData getDataByHandler(Class<? extends ADataHandler> handler) {
         if (handler != null) {
-            for (DataHandler h : mOptionHandlers) {
+            for (ADataHandler h : mOptionHandlers) {
                 if (h.getClass() == handler) {
                     return h.getData();
                 }
@@ -99,18 +100,18 @@ public abstract class DataCenter {
      * @param callback  回调方法
      */
     private void dispatchOperation(final String operation, final Object params, final ICallback callback) {
-        for (DataHandler handler : mOptionHandlers) {
+        for (ADataHandler handler : mOptionHandlers) {
             if (handler.isContainsOperation(operation)) {
                 IPerformer performer = handler.getOperationPerformer(operation);
                 if (performer.isAsynchronous()) {
                     performer.performOperation(operation, params, new ICallback() {
                         @Override
-                        public void onCallback(String operation, Data data) {
+                        public void onCallback(String operation, AData data) {
                             handleData(operation, data, callback);
                         }
                     });
                 } else {
-                    Data data = performer.performOperation(operation, params, null);
+                    AData data = performer.performOperation(operation, params, null);
                     handleData(operation, data, callback);
                 }
                 return;
@@ -120,9 +121,9 @@ public abstract class DataCenter {
         throw new RuntimeException("<<<没有找到对应的OperationPerformer处理器，请确认处理器是否已绑定>>>");
     }
 
-    private void handleData(final String operation, final Data data, final ICallback callback) {
+    private void handleData(final String operation, final AData data, final ICallback callback) {
         //原始数据经过对应解析器解析后的数据，如果没有相应的解析器，则直接以原始数据返回
-        final Data finalData = dispatchDataParser(operation, data);
+        final AData finalData = dispatchDataParser(operation, data);
 
         //一个Operation在处理完成并解析完数据后，在主线程以解析后的数据通过Callback回调给请求操作者
         if (callback == null) {
@@ -145,8 +146,8 @@ public abstract class DataCenter {
      * @param data
      * @return
      */
-    private Data dispatchDataParser(String operation, Data data) {
-        for (DataHandler handler : mOptionHandlers) {
+    private AData dispatchDataParser(String operation, AData data) {
+        for (ADataHandler handler : mOptionHandlers) {
             if (handler.isContainsParser(operation)) {
                 return handler.parseData(operation, data);
             }

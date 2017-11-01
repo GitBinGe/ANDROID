@@ -11,7 +11,23 @@ import org.json.JSONObject;
  * 此类为数据中心所有数据的基本类型
  */
 
-public abstract class Data extends JData{
+public abstract class AData extends JData{
+
+    public AData() {
+        super();
+    }
+
+    public AData(String jsonString) {
+        super(jsonString);
+    }
+
+    public AData(JSONObject jsonObject) {
+        super(jsonObject);
+    }
+
+    public AData(JSON json) {
+        super(json);
+    }
 
     /**
      * 判断数据是否正常
@@ -23,4 +39,9 @@ public abstract class Data extends JData{
      * 数据初始化完成后会调用这个方法，供子类做一些初始化工作
      */
     public abstract void onData();
+
+    @Override
+    public final void onJDataRefresh() {
+        onData();
+    }
 }

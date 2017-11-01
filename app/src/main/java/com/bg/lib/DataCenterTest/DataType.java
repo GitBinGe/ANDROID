@@ -1,7 +1,7 @@
 package com.bg.lib.DataCenterTest;
 
 
-import com.bg.library.DataCenter.DataHandler;
+import com.bg.library.DataCenter.ADataHandler;
 
 /**
  * Created by BinGe on 2017/9/12.
@@ -12,13 +12,13 @@ public enum DataType {
 
     ;
 
-    private Class<? extends DataHandler> handlerClass;
+    private Class<? extends ADataHandler> handlerClass;
 
-    DataType(Class<? extends DataHandler> cls) {
+    DataType(Class<? extends ADataHandler> cls) {
         handlerClass = cls;
     }
 
-    public Class<? extends DataHandler> getHandlerClass() {
+    public Class<? extends ADataHandler> getHandlerClass() {
         return handlerClass;
     }
 
