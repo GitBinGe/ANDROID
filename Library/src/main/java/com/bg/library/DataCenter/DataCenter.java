@@ -4,8 +4,6 @@ package com.bg.library.DataCenter;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.bg.library.Base.Objects.JSON.JError;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -18,14 +16,6 @@ import java.util.concurrent.Executors;
  */
 
 public abstract class DataCenter {
-
-    /**
-     * 调用{@link DataCenter#performOperation(String, Object, Callback)} 时
-     * 如果需要数据回调，则实现这个接口等待回调
-     */
-    public interface Callback {
-        void onCallback(String operation, Data data);
-    }
 
     /**
      * 用于任务的主线程和子线程的分发工作
@@ -46,6 +36,11 @@ public abstract class DataCenter {
         mHandler = new Handler(Looper.getMainLooper());
         mThreadPool = Executors.newFixedThreadPool(3);
         initDataHandlers(getOptionHandlers());
+    }
+
+    public void setThreadCount(int threadCount) {
+        mThreadPool.shutdown();
+        mThreadPool = Executors.newFixedThreadPool(threadCount);
     }
 
     /**
@@ -87,7 +82,7 @@ public abstract class DataCenter {
      * @param operation
      * @param params    请求对应的参数
      */
-    protected final void performOperation(final String operation, final Object params, final Callback callback) {
+    protected final void performOperation(final String operation, final Object params, final ICallback callback) {
         mThreadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -103,12 +98,12 @@ public abstract class DataCenter {
      * @param params    参数
      * @param callback  回调方法
      */
-    private void dispatchOperation(final String operation, final Object params, final Callback callback) {
+    private void dispatchOperation(final String operation, final Object params, final ICallback callback) {
         for (DataHandler handler : mOptionHandlers) {
             if (handler.isContainsOperation(operation)) {
-                OperationPerformer performer = handler.getOperationPerformer(operation);
+                IPerformer performer = handler.getOperationPerformer(operation);
                 if (performer.isAsynchronous()) {
-                    performer.performOperation(operation, params, new Callback() {
+                    performer.performOperation(operation, params, new ICallback() {
                         @Override
                         public void onCallback(String operation, Data data) {
                             handleData(operation, data, callback);
@@ -125,7 +120,7 @@ public abstract class DataCenter {
         throw new RuntimeException("<<<没有找到对应的OperationPerformer处理器，请确认处理器是否已绑定>>>");
     }
 
-    private void handleData(final String operation, final Data data, final Callback callback) {
+    private void handleData(final String operation, final Data data, final ICallback callback) {
         //原始数据经过对应解析器解析后的数据，如果没有相应的解析器，则直接以原始数据返回
         final Data finalData = dispatchDataParser(operation, data);
 

@@ -5,7 +5,7 @@ package com.bg.library.DataCenter;
  * 数据解析器接口，用于DataHandler中如果需要具备数据处理能需要实现这个接口
  */
 
-public interface DataParser<T extends Data> {
+public interface IParser<T extends Data> {
 
     /**
      * 数据中心在处理完一个操作后会有一份原始数据，数据会由这个方法进行解析

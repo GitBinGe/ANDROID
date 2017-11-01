@@ -176,24 +176,11 @@ public class JSON extends BaseObject {
     }
 
     /**
-     * 返回key对应的JSONObject对像
+     * 获取非空的JSON数据，
      *
      * @param key
      * @return
-     */
-    public JSONObject getJSONObject(String key) {
-        try {
-            return this.json.getJSONObject(key);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 获取JSON数据
-     *
-     * @param key
-     * @return
+     * {@link ()} 方法判断是否原始数据为空
      */
     public JSON getJSON(String key) {
         try {
@@ -203,7 +190,7 @@ public class JSON extends BaseObject {
             }
         } catch (Exception e) {
         }
-        return null;
+        return new JSON();
     }
 
     /**

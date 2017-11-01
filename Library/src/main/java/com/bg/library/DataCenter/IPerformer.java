@@ -7,7 +7,7 @@ package com.bg.library.DataCenter;
  * 此接口为Operation的处理器，实现此接可有处理Operation的能力
  */
 
-public interface OperationPerformer<T> {
+public interface IPerformer<T> {
 
     /**
      * 对操作进行处理后，返回处理后的数据
@@ -15,7 +15,7 @@ public interface OperationPerformer<T> {
      * @param params
      * @return
      */
-    Data performOperation(String operation, T params, DataCenter.Callback callback);
+    Data performOperation(String operation, T params, ICallback callback);
 
     /**
      * 返回此操作是否为异步返回到数据中心

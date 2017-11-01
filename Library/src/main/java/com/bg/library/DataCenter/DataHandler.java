@@ -12,12 +12,12 @@ public abstract class DataHandler<T extends Data> {
     /**
      * 操作对应的处理器的集合
      */
-    private Map<String, OperationPerformer> operationHandler = new HashMap<>();
+    private Map<String, IPerformer> operationHandler = new HashMap<>();
 
     /**
      * 原始数据对应的处理器集合
      */
-    private Map<String, DataParser> operationParser = new HashMap<>();
+    private Map<String, IParser> operationParser = new HashMap<>();
 
     /**
      * 每个handler都有一个data供外面调用
@@ -39,7 +39,7 @@ public abstract class DataHandler<T extends Data> {
      * @param operation
      * @return
      */
-    public OperationPerformer getOperationPerformer(String operation) {
+    public IPerformer getOperationPerformer(String operation) {
         return operationHandler.get(operation);
     }
 
@@ -49,7 +49,7 @@ public abstract class DataHandler<T extends Data> {
      * @param handler
      * @return
      */
-    public boolean bindOperation(String operation, OperationPerformer handler) {
+    public boolean bindOperation(String operation, IPerformer handler) {
         if (operation != null && handler != null) {
             operationHandler.put(operation, handler);
             return true;
@@ -73,7 +73,7 @@ public abstract class DataHandler<T extends Data> {
      * @param operation
      * @return
      */
-    public boolean bindDataParser(String operation, DataParser parser) {
+    public boolean bindDataParser(String operation, IParser parser) {
         if (operation != null && parser != null) {
             operationParser.put(operation, parser);
             return true;
@@ -88,7 +88,7 @@ public abstract class DataHandler<T extends Data> {
      * @param data
      */
     public final Data parseData(String operation, Data data) {
-        DataParser parser = operationParser.get(operation);
+        IParser parser = operationParser.get(operation);
         data = parser.parse(operation, data);
         return data;
     }

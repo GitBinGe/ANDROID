@@ -2,6 +2,7 @@ package com.bg.lib.DataCenterTest;
 
 
 import com.bg.library.DataCenter.DataHandler;
+import com.bg.library.DataCenter.ICallback;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class DataCenter extends com.bg.library.DataCenter.DataCenter{
      *
      * @param params    请求对应的参数
      */
-    public void perform(String operation, Object params, Callback callback) {
+    public void perform(String operation, Object params, ICallback callback) {
         performOperation(operation, params, callback);
     }
 
