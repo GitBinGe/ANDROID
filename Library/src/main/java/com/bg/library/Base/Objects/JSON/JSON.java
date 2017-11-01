@@ -228,20 +228,42 @@ public class JSON extends BaseObject {
     }
 
 
-    public static JSONObject make(Object... args) {
-        JSONObject jsonObject = new JSONObject();
+    /**
+     * 生成一个JSONObject数据
+     * @param args key,value,key,value...
+     * @return
+     */
+    public static JSON make(Object... args) {
+        JSON json = new JSON();
         int length = args.length;
         try {
             for (int i = 0; i < length; ) {
                 Object key = args[i];
                 Object value = args[i + 1];
-                jsonObject.put(key.toString(), value);
+                json.put(key.toString(), value);
                 i += 2;
             }
         } catch (Exception e) {
             throw new RuntimeException("JSON数据异常");
         }
-        return jsonObject;
+        return json;
+    }
+
+    /**
+     * JSONArray 转 ArrayList
+     * @param arr
+     * @return
+     */
+    public static ArrayList<JSON> JSONArray2ArrayList(JSONArray arr) {
+        ArrayList<JSON> list = new ArrayList<>();
+        try {
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject jsonObject = arr.getJSONObject(i);
+                list.add(new JSON(jsonObject));
+            }
+        } catch (Exception e) {
+        }
+        return list;
     }
 
 }
