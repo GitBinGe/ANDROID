@@ -34,7 +34,7 @@ public class JSON extends BaseObject {
     }
 
     public JSON(JSON json) {
-        setJSONObject(json == null ? null : json.getJSONObject());
+        setJSONObject(json == null ? null : json.getSource());
     }
 
     /**
@@ -109,11 +109,11 @@ public class JSON extends BaseObject {
      * @param key
      * @return
      */
-    public String stringByKey(String key) {
-        return stringByKey(key, null);
+    public String getString(String key) {
+        return getString(key, null);
     }
 
-    public String stringByKey(String key, String defaultValue) {
+    public String getString(String key, String defaultValue) {
         try {
             return this.json.getString(key);
         } catch (Exception e) {
@@ -127,11 +127,11 @@ public class JSON extends BaseObject {
      * @param key
      * @return
      */
-    public int integerByKey(String key) {
-        return integerByKey(key, -1);
+    public int getInteger(String key) {
+        return getInteger(key, -1);
     }
 
-    public int integerByKey(String key, int defaultValue) {
+    public int getInteger(String key, int defaultValue) {
         try {
             return this.json.getInt(key);
         } catch (Exception e) {
@@ -145,11 +145,11 @@ public class JSON extends BaseObject {
      * @param key
      * @return
      */
-    public long longByKey(String key) {
-        return longByKey(key, -1);
+    public long getLong(String key) {
+        return getLong(key, -1);
     }
 
-    public long longByKey(String key, long defaultValue) {
+    public long getLong(String key, long defaultValue) {
         try {
             return this.json.getLong(key);
         } catch (Exception e) {
@@ -163,11 +163,11 @@ public class JSON extends BaseObject {
      * @param key
      * @return
      */
-    public boolean booleanByKey(String key) {
-        return booleanByKey(key, false);
+    public boolean getBoolean(String key) {
+        return getBoolean(key, false);
     }
 
-    public boolean booleanByKey(String key, boolean defaultValue) {
+    public boolean getBoolean(String key, boolean defaultValue) {
         try {
             return this.json.getBoolean(key);
         } catch (Exception e) {
@@ -181,7 +181,7 @@ public class JSON extends BaseObject {
      * @param key
      * @return
      */
-    public JSONObject JSONObjectByKey(String key) {
+    public JSONObject getJSONObject(String key) {
         try {
             return this.json.getJSONObject(key);
         } catch (Exception e) {
@@ -189,7 +189,7 @@ public class JSON extends BaseObject {
         }
     }
 
-    public JSON JSONByKey(String key) {
+    public JSON getJSON(String key) {
         try {
             JSONObject jsonObject = this.json.getJSONObject(key);
             if (jsonObject != null) {
@@ -207,7 +207,7 @@ public class JSON extends BaseObject {
      * @param key
      * @return
      */
-    public JSONArray JSONArrayByKey(String key) {
+    public JSONArray getJSONArray(String key) {
         try {
             return this.json.getJSONArray(key);
         } catch (Exception e) {
@@ -215,27 +215,7 @@ public class JSON extends BaseObject {
         }
     }
 
-    /**
-     * 返回key对应的字符串数组对像
-     *
-     * @param key
-     * @return
-     */
-    public List<String> stringArrayByKey(String key) {
-        List<String> list = new ArrayList<>();
-        JSONArray arr;
-        try {
-            arr = this.json.getJSONArray(key);
-            for (int i = 0; i < arr.length(); i++) {
-                list.add(arr.getString(i));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public JSONObject getJSONObject() {
+    public JSONObject getSource() {
         return json;
     }
 
@@ -268,7 +248,7 @@ public class JSON extends BaseObject {
      * @param arr
      * @return
      */
-    public static ArrayList<JSON> JSONArray2ArrayList(JSONArray arr) {
+    public static ArrayList<JSON> toList(JSONArray arr) {
         ArrayList<JSON> list = new ArrayList<>();
         try {
             for (int i = 0; i < arr.length(); i++) {
