@@ -29,6 +29,21 @@ public abstract class AData extends JData{
         super(json);
     }
 
+    public AData setData(JSONObject jsonObject) {
+        setJSONObject(jsonObject);
+        return this;
+    }
+
+    public AData setData(String jsonString) {
+        setJSONString(jsonString);
+        return this;
+    }
+
+    public AData setData(JSON json) {
+        setJSON(json);
+        return this;
+    }
+
     /**
      * 判断数据是否正常
      * @return
@@ -38,10 +53,10 @@ public abstract class AData extends JData{
     /**
      * 数据初始化完成后会调用这个方法，供子类做一些初始化工作
      */
-    public abstract void onData();
+    public abstract void onDataRefresh();
 
     @Override
     public final void onJDataRefresh() {
-        onData();
+        onDataRefresh();
     }
 }
