@@ -13,7 +13,7 @@ import java.util.List;
  * 所有Activity的基类
  */
 
-public class PresenterActivity extends SoftInputActivity {
+public class PresenterActivity extends PermissionsActivity {
 
     /**
      * HTPresenter列表
