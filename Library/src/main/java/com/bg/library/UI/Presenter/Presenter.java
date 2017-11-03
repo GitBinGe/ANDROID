@@ -12,21 +12,34 @@ import android.view.ViewGroup;
 
 public class Presenter {
 
+    private Context context;
     private View rootView;
 
-    public Presenter(View roorView) {
-        this.rootView = roorView;
+    public Presenter(View rootView) {
+        this.rootView = rootView;
+        if (rootView != null) {
+            context = rootView.getContext();
+        }
     }
 
     public Presenter(Context context) {
+        this.context = context;
         if (context instanceof Activity) {
             Activity a = (Activity) context;
             ViewGroup content = (ViewGroup) a.findViewById(android.R.id.content);
-            this.rootView = (ViewGroup) content.getChildAt(0);
+            this.rootView = content.getChildAt(0);
             if (this.rootView == null) {
                 throw new NullPointerException("请先调用 Activity 的 setContentView方法");
             }
         }
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public View getRootView() {
+        return rootView;
     }
 
     public View findViewById(int id) {
