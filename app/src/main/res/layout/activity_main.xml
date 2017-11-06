@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.bg.lib.MainActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <com.bg.library.UI.View.CloseView
-        android:id="@+id/close"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="right"
-        android:background="@color/color_w"
-        android:layout_margin="5dp"/>
+    <com.bg.library.UI.View.DragRecyclerView.DragClassicFrameLayout
+        xmlns:cube_drag="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/test_recycler_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f0f0f0"
+        cube_drag:drag_duration_to_close="200"
+        cube_drag:drag_duration_to_close_header="700"
+        cube_drag:drag_keep_header_when_refresh="true"
+        cube_drag:drag_pull_to_fresh="false"
+        cube_drag:drag_ratio_of_header_height_to_refresh="1.2"
+        cube_drag:drag_resistance="1.8">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/test_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"/>
 
-        <com.bg.library.UI.View.SmileLoadingView
-            android:id="@+id/loading"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:visibility="visible" />
-    </FrameLayout>
+    </com.bg.library.UI.View.DragRecyclerView.DragClassicFrameLayout>
 
-
-</FrameLayout>
+</LinearLayout>

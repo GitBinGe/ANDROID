@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="DragFrameLayout">
+        <!-- Optional. If you put header and content in xml, you can you these to specify them. -->
+        <attr name="drag_header" format="reference" />
+        <attr name="drag_content" format="reference" />
+
+        <!-- the resistance when you are moving the frame -->
+        <attr name="drag_resistance" format="float" />
+
+        <!-- the ration of the height of the header to trigger refresh -->
+        <attr name="drag_ratio_of_header_height_to_refresh" format="float" />
+
+        <attr name="drag_duration_to_close" format="integer" />
+        <attr name="drag_duration_to_close_header" format="integer" />
+
+        <!-- pull to refresh, otherwise release to refresh, default is release to refresh -->
+        <attr name="drag_pull_to_fresh" format="boolean" />
+
+        <!-- keep header when refreshing-->
+        <attr name="drag_keep_header_when_refresh" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DragClassicHeader">
+        <attr name="drag_rotate_ani_time" format="integer" />
+    </declare-styleable>
+</resources>
