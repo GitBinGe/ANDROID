@@ -1,6 +1,8 @@
 package com.bg.library.Utils.Image;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 import java.io.File;
 
@@ -12,6 +14,7 @@ public class ImageUtils {
 
     /**
      * 检验图片是否正常
+     *
      * @param path
      * @return
      */
