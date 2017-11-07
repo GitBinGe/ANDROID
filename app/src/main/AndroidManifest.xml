@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".RecycleViewDemo.DragRecyclerViewDemoActivity">
             <intent-filter>
+                <action android:name="DragRecyclerViewDemoActivity" />
                 <category android:name="DragRecyclerViewDemoActivity" />
             </intent-filter>
         </activity>

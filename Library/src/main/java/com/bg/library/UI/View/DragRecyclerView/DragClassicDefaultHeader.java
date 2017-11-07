@@ -1,5 +1,6 @@
 package com.bg.library.UI.View.DragRecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -51,7 +52,7 @@ public class DragClassicDefaultHeader extends FrameLayout implements DragUIHandl
     }
 
     protected void initViews(AttributeSet attrs) {
-        TypedArray arr = getContext().obtainStyledAttributes(attrs, R.styleable.DragClassicHeader, 0, 0);
+        @SuppressLint({"Recycle", "CustomViewStyleable"}) TypedArray arr = getContext().obtainStyledAttributes(attrs, R.styleable.DragClassicHeader, 0, 0);
         if (arr != null) {
             mRotateAniTime = arr.getInt(R.styleable.DragClassicHeader_drag_rotate_ani_time, mRotateAniTime);
         }
