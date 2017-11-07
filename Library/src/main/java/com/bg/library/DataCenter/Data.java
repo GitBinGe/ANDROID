@@ -1,6 +1,5 @@
 package com.bg.library.DataCenter;
 
-import com.bg.library.Base.Objects.JSON.JError;
 import com.bg.library.Base.Objects.JSON.JSON;
 
 /**
@@ -9,24 +8,10 @@ import com.bg.library.Base.Objects.JSON.JSON;
  */
 
 public abstract class Data extends JSON {
-
-    /**
-     * 错误信息
-     */
-    public JError error;
-
     /**
      * 判断数据是否正常的方法
      *
      * @return
      */
-    public final boolean isDataNormal() {
-        return error == null && !isJSONEmpty();
-    }
-
-    /**
-     * json数据刷新的时候会调用这个方法
-     */
-    protected abstract void onData();
-
+    public abstract boolean isDataNormal();
 }
