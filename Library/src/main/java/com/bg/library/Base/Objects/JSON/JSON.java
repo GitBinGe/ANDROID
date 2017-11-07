@@ -28,6 +28,7 @@ public class JSON extends BaseObject {
      * @return
      */
     public JSON setData(String jsonString) {
+        this.json = null;
         if (jsonString != null) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonString);
@@ -58,6 +59,7 @@ public class JSON extends BaseObject {
      * @return
      */
     public JSON setData(JSON json) {
+        this.json = null;
         if (json != null) {
             this.json = json.json;
         }
