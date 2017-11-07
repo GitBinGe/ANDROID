@@ -17,4 +17,8 @@ public class HTData extends Data {
         LogUtils.d(this.getSource());
     }
 
+    @Override
+    public boolean isDataNormal() {
+        return false;
+    }
 }
