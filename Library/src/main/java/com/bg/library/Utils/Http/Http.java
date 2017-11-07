@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
-import com.bg.library.Base.Objects.JSON.JData;
+import com.bg.library.Base.Objects.JSON.JSON;
 import com.bg.library.Base.Objects.JSON.JError;
 import com.bg.library.Utils.Image.ImageUtils;
 
@@ -29,7 +29,29 @@ import java.util.UUID;
  * http 功能类
  */
 
-public class Http {
+public final class Http {
+
+    /**
+     * 返回请求结果数据
+     */
+    public final static class ResponseData extends JSON {
+
+        /**
+         * 类只能由http工具创建
+         */
+        private ResponseData() {
+
+        }
+
+        public JError error;
+
+        public String cookies;
+
+        public boolean isResponseOK() {
+            return !isJSONEmpty() && error == null;
+        }
+
+    }
 
     /**
      * Post服务请求
@@ -37,10 +59,10 @@ public class Http {
      * @param params     请求参数
      * @return
      */
-    public static JData post(String requestUrl, Map<String, Object> params) {
+    public static ResponseData post(String requestUrl, Map<String, Object> params) {
         return post(null, requestUrl, params);
     }
-    public static JData post(String cookie, String requestUrl, Map<String, Object> params) {
+    public static ResponseData post(String cookie, String requestUrl, Map<String, Object> params) {
         StringBuffer requestParams = new StringBuffer();
         if (params != null) {
             for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -65,13 +87,17 @@ public class Http {
      * @param params     请求参数
      * @return
      */
-    public static JData post(String requestUrl, String params) {
+    public static ResponseData post(String requestUrl, String params) {
         return post(null, requestUrl, params);
     }
-    public static JData post(String cookie, String requestUrl, String params) {
-        JData data = new JData();
+    public static ResponseData post(String cookie, String requestUrl, String params) {
+        ResponseData data = new ResponseData();
         try {
             //建立连接
+            if (TextUtils.isEmpty(requestUrl)) {
+                data.error = new JError(JError.DEFAULT_ERROR_CODE, "URL is Empty!", requestUrl);
+                return data;
+            }
             URL url = new URL(requestUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -97,7 +123,7 @@ public class Http {
 
             //获取cookie
             String cookieVal = connection.getHeaderField("Set-Cookie");
-            data.setCookies(cookieVal);
+            data.cookies = cookieVal;
 
             //获取响应状态
             int responseCode = connection.getResponseCode();
@@ -112,15 +138,14 @@ public class Http {
                     buffer.append(readLine).append("\n");
                 }
                 responseReader.close();
-                data.setJSONString(buffer.toString());
+                data.setData(buffer.toString());
             } else {
                 JError err = new JError(responseCode, connection.getResponseMessage(), requestUrl);
-                data.setJDataError(err);
+                data.error = err;
             }
 
         } catch (Exception e) {
-            JError err = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), requestUrl);
-            data.setJDataError(err);
+            data.error = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), requestUrl);;
         }
         return data;
     }
@@ -236,8 +261,8 @@ public class Http {
      * @param param     附带的参数
      * @return
      */
-    public static JData uploadImage(String cookie, File file, String fileKey, String uploadUrl, Map<String, String> param) {
-        JData data = new JData();
+    public static ResponseData uploadImage(String cookie, File file, String fileKey, String uploadUrl, Map<String, String> param) {
+        ResponseData data = new ResponseData();
         final String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
         final String PREFIX = "--";
         final String LINE_END = "\r\n";
@@ -302,7 +327,7 @@ public class Http {
 
             //获取cookie
             String cookieVal = conn.getHeaderField("Set-Cookie");
-            data.setCookies(cookieVal);
+            data.cookies = cookieVal;
 
             int res = conn.getResponseCode();
             if (res == 200) {
@@ -313,14 +338,14 @@ public class Http {
                     sb1.append((char) ss);
                 }
                 result = sb1.toString();
-                data.setJSONString(result);
+                data.setData(result);
             } else {
                 JError err = new JError(res, conn.getResponseMessage(), uploadUrl);
-                data.setJDataError(err);
+                data.error = err;
             }
         } catch (Exception e) {
             JError err = new JError(JError.DEFAULT_ERROR_CODE, e.getMessage(), uploadUrl);
-            data.setJDataError(err);
+            data.error = err;
         }
         return data;
     }

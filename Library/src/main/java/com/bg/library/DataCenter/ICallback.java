@@ -7,6 +7,6 @@ package com.bg.library.DataCenter;
 
 public interface ICallback {
 
-    void onCallback(String operation, AData data);
+    void onCallback(String operation, Data data);
 
 }

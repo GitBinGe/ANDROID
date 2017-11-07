@@ -21,51 +21,21 @@ public class JSON extends BaseObject {
      */
     private JSONObject json;
 
-    public JSON() {
-        setJSONObject(null);
-    }
-
-    public JSON(String jsonString) {
-        setJSONString(jsonString);
-    }
-
-    public JSON(JSONObject jsonObject) {
-        setJSONObject(jsonObject);
-    }
-
-    public JSON(JSON json) {
-        setJSON(json);
-    }
-
     /**
      * 通过字符串类型的json数据初始化
      *
      * @param jsonString
      * @return
      */
-    public final JSON setJSONString(String jsonString) {
+    public JSON setData(String jsonString) {
         if (jsonString != null) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonString);
-                setJSONObject(jsonObject);
+                this.json = jsonObject;
             } catch (JSONException e) {
-                setJSONObject(null);
             }
         }
-        return this;
-    }
-
-    /**
-     * 通过JSON类型的数据初始化
-     *
-     * @param json
-     * @return
-     */
-    public final JSON setJSON(JSON json) {
-        try {
-            setJSONObject(json.getSource());
-        } catch (Exception e) {
-        }
+        onData();
         return this;
     }
 
@@ -75,17 +45,24 @@ public class JSON extends BaseObject {
      * @param jsonObject
      * @return
      */
-    public final JSON setJSONObject(JSONObject jsonObject) {
+    public JSON setData(JSONObject jsonObject) {
         this.json = jsonObject;
-        onJSONRefresh();
+        onData();
         return this;
     }
 
     /**
-     * json数据改变时调用
+     * 通过JSON类型的数据初始化
+     *
+     * @param json
+     * @return
      */
-    public void onJSONRefresh() {
-
+    public JSON setData(JSON json) {
+        if (json != null) {
+            this.json = json.json;
+        }
+        onData();
+        return this;
     }
 
 
@@ -95,9 +72,13 @@ public class JSON extends BaseObject {
         }
         try {
             json.put(key, value);
-            onJSONRefresh();
         } catch (JSONException e) {
         }
+        onData();
+    }
+
+    protected void onData() {
+
     }
 
     /**
@@ -193,14 +174,15 @@ public class JSON extends BaseObject {
      * 获取非空的JSON数据，
      *
      * @param key
-     * @return
-     * {@link ()} 方法判断是否原始数据为空
+     * @return {@link ()} 方法判断是否原始数据为空
      */
     public JSON getJSON(String key) {
         try {
             JSONObject jsonObject = this.json.getJSONObject(key);
             if (jsonObject != null) {
-                return new JSON(jsonObject);
+                JSON json = new JSON();
+                json.setData(jsonObject);
+                return json;
             }
         } catch (Exception e) {
         }
@@ -220,7 +202,9 @@ public class JSON extends BaseObject {
                 List<JSON> jsonList = new ArrayList<>();
                 for (int i = 0; i < array.length(); i++) {
                     try {
-                        jsonList.add(new JSON(array.getJSONObject(i)));
+                        JSON json = new JSON();
+                        json.setData(array.getJSONObject(i));
+                        jsonList.add(json);
                     } catch (Exception e) {
                     }
                 }
@@ -308,11 +292,18 @@ public class JSON extends BaseObject {
         try {
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject jsonObject = arr.getJSONObject(i);
-                list.add(new JSON(jsonObject));
+                JSON json = new JSON();
+                json.setData(jsonObject);
+                list.add(json);
             }
         } catch (Exception e) {
         }
         return list;
     }
 
+    protected JSON clone() {
+        JSON newJson = new JSON();
+        newJson.json = this.json;
+        return newJson;
+    }
 }

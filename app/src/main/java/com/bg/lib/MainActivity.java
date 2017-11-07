@@ -1,9 +1,7 @@
 package com.bg.lib;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import com.bg.lib.RecycleViewDemo.DragRecyclerViewDemoActivity;
 import com.bg.library.UI.Activity.PresenterActivity;
 
 public class MainActivity extends PresenterActivity {
@@ -12,7 +10,6 @@ public class MainActivity extends PresenterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startActivity(new Intent(this, DragRecyclerViewDemoActivity.class));
     }
 
 }

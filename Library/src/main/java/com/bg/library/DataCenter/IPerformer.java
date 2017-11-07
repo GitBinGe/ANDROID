@@ -15,7 +15,7 @@ public interface IPerformer<T> {
      * @param params
      * @return
      */
-    AData performOperation(String operation, T params, ICallback callback);
+    Data performOperation(String operation, T params, ICallback callback);
 
     /**
      * 返回此操作是否为异步返回到数据中心

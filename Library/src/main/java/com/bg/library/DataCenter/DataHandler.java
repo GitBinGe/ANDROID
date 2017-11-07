@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by BinGe on 2017/9/8.
  */
 
-public abstract class ADataHandler<T extends AData> {
+public abstract class DataHandler {
 
     /**
      * 操作对应的处理器的集合
@@ -23,7 +23,7 @@ public abstract class ADataHandler<T extends AData> {
      * 每个handler都有一个data供外面调用
      * @return
      */
-    public abstract T getData();
+    public abstract Data getData();
 
     /**
      * 判断此Handler是否绑定了operation这个操作
@@ -87,7 +87,7 @@ public abstract class ADataHandler<T extends AData> {
      * @param operation
      * @param data
      */
-    public final AData parseData(String operation, AData data) {
+    public final Data parseData(String operation, Data data) {
         IParser parser = operationParser.get(operation);
         data = parser.parse(operation, data);
         return data;

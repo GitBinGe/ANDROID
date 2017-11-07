@@ -36,6 +36,6 @@ public class JError extends BaseObject {
 
     @Override
     public String toString() {
-        return "errorCode: " + this.errorCode + ", errorInfo: " + this.errorInfo +"\n"+this.url;
+        return "errorCode: " + this.errorCode + ",  errorInfo: " + this.errorInfo + ",  url: " + this.url;
     }
 }

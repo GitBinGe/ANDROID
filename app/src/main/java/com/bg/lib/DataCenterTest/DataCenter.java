@@ -1,8 +1,7 @@
 package com.bg.lib.DataCenterTest;
 
 
-import com.bg.library.DataCenter.ADataCenter;
-import com.bg.library.DataCenter.ADataHandler;
+import com.bg.library.DataCenter.DataHandler;
 import com.bg.library.DataCenter.ICallback;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
  * 数据中心，app中所有的数据都通过DataCenter请求或获取
  */
 
-public class DataCenter extends ADataCenter {
+public class DataCenter extends com.bg.library.DataCenter.DataCenter {
 
     /**
      * 获取数据中心单例
@@ -59,8 +58,8 @@ public class DataCenter extends ADataCenter {
 
 
     @Override
-    public ArrayList<Class<? extends ADataHandler>> getOptionHandlers() {
-        return new ArrayList<Class<? extends ADataHandler>>() {
+    public ArrayList<Class<? extends DataHandler>> getOptionHandlers() {
+        return new ArrayList<Class<? extends DataHandler>>() {
             {
                 /**
                  * 公共处理器
