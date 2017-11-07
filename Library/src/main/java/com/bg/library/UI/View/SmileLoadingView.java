@@ -53,4 +53,8 @@ public class SmileLoadingView extends View {
     public void stop() {
         mSmileLoadingDrawable.stop();
     }
+
+    public void hide() {
+        mSmileLoadingDrawable.hide();
+    }
 }

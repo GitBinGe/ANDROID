@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.bg.library.UI.View.DragRecyclerView.DragClassicFrameLayout xmlns:cube_drag="http://schemas.android.com/apk/res-auto"
+    <com.bg.library.UI.View.DragRecyclerView.DragRefreshLayout xmlns:cube_drag="http://schemas.android.com/apk/res-auto"
         android:id="@+id/test_recycler_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,6 +22,6 @@
             android:layout_height="match_parent"
             android:background="@android:color/white" />
 
-    </com.bg.library.UI.View.DragRecyclerView.DragClassicFrameLayout>
+    </com.bg.library.UI.View.DragRecyclerView.DragRefreshLayout>
 
 </LinearLayout>

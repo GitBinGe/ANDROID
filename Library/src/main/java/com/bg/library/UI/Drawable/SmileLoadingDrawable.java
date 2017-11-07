@@ -114,12 +114,18 @@ public class SmileLoadingDrawable extends ShapeDrawable {
     }
 
     public void start() {
+        setVisible(true, true);
         isStart = true;
         animator.start();
     }
 
     public void stop() {
+        setVisible(true, true);
         isStart = false;
+    }
+
+    public void hide() {
+        setVisible(false, true);
     }
 
 }

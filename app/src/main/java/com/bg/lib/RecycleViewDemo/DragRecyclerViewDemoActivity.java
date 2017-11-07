@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.bg.lib.R;
 import com.bg.library.UI.Activity.PresenterActivity;
-import com.bg.library.UI.View.DragRecyclerView.DragClassicFrameLayout;
 import com.bg.library.UI.View.DragRecyclerView.DragDefaultHandler;
 import com.bg.library.UI.View.DragRecyclerView.DragFrameLayout;
+import com.bg.library.UI.View.DragRecyclerView.DragRefreshLayout;
 import com.bg.library.UI.View.DragRecyclerView.loadmore.OnLoadMoreListener;
 import com.bg.library.UI.View.DragRecyclerView.recyclerview.RecyclerAdapterWithHF;
 
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DragRecyclerViewDemoActivity extends PresenterActivity {
-    DragClassicFrameLayout dragClassicFrameLayout;
+    DragRefreshLayout dragRefreshLayout;
     RecyclerView mRecyclerView;
     private List<String> mData = new ArrayList<String>();
     private RecyclerAdapter adapter;
@@ -37,7 +37,7 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drag_recycler_view);
 
-        dragClassicFrameLayout = (DragClassicFrameLayout) findViewById(R.id.test_recycler_view_frame);
+        dragRefreshLayout = (DragRefreshLayout) findViewById(R.id.test_recycler_view_frame);
         mRecyclerView = (RecyclerView) findViewById(R.id.test_recycler_view);
         init();
     }
@@ -47,15 +47,15 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
         mAdapter = new RecyclerAdapterWithHF(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
-        dragClassicFrameLayout.postDelayed(new Runnable() {
+        dragRefreshLayout.postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                dragClassicFrameLayout.autoRefresh(true);
+                dragRefreshLayout.autoRefresh(true);
             }
         }, 150);
 
-        dragClassicFrameLayout.setDragHandler(new DragDefaultHandler() {
+        dragRefreshLayout.setDragHandler(new DragDefaultHandler() {
 
             @Override
             public void onRefreshBegin(DragFrameLayout frame) {
@@ -65,17 +65,17 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                         page = 0;
                         mData.clear();
                         for (int i = 0; i < 17; i++) {
-                            mData.add(new String("  RecyclerView item  -" + i));
+                            mData.add(new String("  RecyclerView item  - " + i));
                         }
                         mAdapter.notifyDataSetChanged();
-                        dragClassicFrameLayout.refreshComplete();
-                        dragClassicFrameLayout.setLoadMoreEnable(true);
+                        dragRefreshLayout.refreshComplete();
+                        dragRefreshLayout.setLoadMoreEnable(true);
                     }
                 }, 1500);
             }
         });
 
-        dragClassicFrameLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+        dragRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
 
             @Override
             public void loadMore() {
@@ -85,7 +85,7 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                     public void run() {
                         mData.add(new String("  RecyclerView item  - add " + page));
                         mAdapter.notifyDataSetChanged();
-                        dragClassicFrameLayout.loadMoreComplete(true);
+                        dragRefreshLayout.loadMoreComplete(true);
                         page++;
                         Toast.makeText(DragRecyclerViewDemoActivity.this, "load more complete", Toast.LENGTH_SHORT).show();
                     }

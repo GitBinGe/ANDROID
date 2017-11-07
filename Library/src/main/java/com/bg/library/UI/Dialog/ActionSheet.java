@@ -1,6 +1,5 @@
 package com.bg.library.UI.Dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,8 +22,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.bg.library.R;
 
 
 /**
