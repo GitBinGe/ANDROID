@@ -17,6 +17,7 @@ import com.bg.library.UI.Activity.PresenterActivity;
 import com.bg.library.UI.View.DragRecyclerView.DragClassicFrameLayout;
 import com.bg.library.UI.View.DragRecyclerView.DragDefaultHandler;
 import com.bg.library.UI.View.DragRecyclerView.DragFrameLayout;
+import com.bg.library.UI.View.DragRecyclerView.DragNoneHandler;
 import com.bg.library.UI.View.DragRecyclerView.DragRefreshLayout;
 import com.bg.library.UI.View.DragRecyclerView.loadmore.OnLoadMoreListener;
 import com.bg.library.UI.View.DragRecyclerView.recyclerview.RecyclerAdapterWithHF;
@@ -57,7 +58,7 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
             }
         }, 150);
 
-        dragRefreshLayout.setDragHandler(new DragDefaultHandler() {
+        dragRefreshLayout.setDragHandler(new DragNoneHandler() {
 
             @Override
             public void onRefreshBegin(DragFrameLayout frame) {
