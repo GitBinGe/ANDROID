@@ -1051,6 +1051,7 @@ public class DragFrameLayout extends ViewGroup {
     private ILoadMoreView mLoadMoreView;
 
     private LoadMoreHandler mLoadMoreHandler;
+    private RecyclerView.OnScrollListener mOnScrollListener;
 
     private View mContentView;
 
@@ -1075,6 +1076,13 @@ public class DragFrameLayout extends ViewGroup {
             }
         }
 
+    }
+
+    public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
+        mOnScrollListener = listener;
+        if (mLoadMoreHandler != null) {
+            mLoadMoreHandler.addOnScrollListener(listener);
+        }
     }
 
     public void setLoadMoreEnable(boolean loadMoreEnable) {
@@ -1105,6 +1113,9 @@ public class DragFrameLayout extends ViewGroup {
 
             hasInitLoadMoreView = mLoadMoreHandler.handleSetAdapter(mContentView, mLoadMoreView,
                     onClickLoadMoreListener);
+            if (mOnScrollListener != null) {
+                mLoadMoreHandler.addOnScrollListener(mOnScrollListener);
+            }
             mLoadMoreHandler.setOnScrollBottomListener(mContentView, onScrollBottomListener);
             return;
         }

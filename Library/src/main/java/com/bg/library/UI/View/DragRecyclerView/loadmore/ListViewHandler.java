@@ -1,6 +1,7 @@
 package com.bg.library.UI.View.DragRecyclerView.loadmore;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +45,11 @@ public class ListViewHandler implements LoadMoreHandler {
             hasInit = true;
         }
         return hasInit;
+    }
+
+    @Override
+    public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
+
     }
 
     @Override
