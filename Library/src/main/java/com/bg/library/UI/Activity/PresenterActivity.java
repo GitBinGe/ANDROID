@@ -13,7 +13,7 @@ import java.util.List;
  * 所有Activity的基类
  */
 
-public class PresenterActivity extends PermissionsActivity {
+public class PresenterActivity extends ThemeActivity {
 
     /**
      * HTPresenter列表

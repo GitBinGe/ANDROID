@@ -1,10 +1,11 @@
 package com.bg.lib;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
-import com.bg.lib.RecycleViewDemo.DragRecyclerViewDemoActivity;
 import com.bg.library.UI.Activity.PresenterActivity;
+import com.bg.library.UI.View.TitleView;
+
 
 public class MainActivity extends PresenterActivity {
 
@@ -13,7 +14,10 @@ public class MainActivity extends PresenterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.image_test);
-        startActivity(new Intent(this, DragRecyclerViewDemoActivity.class));
+        TitleView titleView = (TitleView) findViewById(R.id.title);
+        titleView.setUnit(TitleView.Unit.BACK| TitleView.Unit.TEXT| TitleView.Unit.ADD);
+        titleView.setColor(Color.BLACK);
+        titleView.setTitle("Main Activity Title");
     }
 
 }

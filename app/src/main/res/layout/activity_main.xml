@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.bg.library.UI.View.TitleView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="46dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/c666" />
+
     <ImageView
         android:id="@+id/image_test"
         android:layout_width="match_parent"
