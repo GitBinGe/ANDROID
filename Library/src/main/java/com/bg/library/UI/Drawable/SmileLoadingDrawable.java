@@ -125,7 +125,7 @@ public class SmileLoadingDrawable extends ShapeDrawable {
     }
 
     public void hide() {
-        setVisible(false, true);
+        setVisible(false, false);
     }
 
 }

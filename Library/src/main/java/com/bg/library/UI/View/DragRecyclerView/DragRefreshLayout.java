@@ -35,6 +35,10 @@ public class DragRefreshLayout extends DragFrameLayout {
         setFooterView(loadMoreViewFactory);
     }
 
+    public void refreshDone() {
+        refreshComplete();
+    }
+
     public DragRefreshHeader getHeader() {
         return mDragRefreshHeader;
     }

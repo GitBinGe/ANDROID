@@ -12,7 +12,6 @@ import com.bg.library.UI.View.DragRecyclerView.recyclerview.RecyclerAdapterWithH
 
 public class RecyclerViewHandler implements LoadMoreHandler {
 
-    private RecyclerView.OnScrollListener mOnScrollListener;
     RecyclerViewOnScrollListener mRecyclerViewOnScrollListener;
     private RecyclerAdapterWithHF mRecyclerAdapter;
     private View mFooter;
@@ -59,20 +58,9 @@ public class RecyclerViewHandler implements LoadMoreHandler {
     }
 
     @Override
-    public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
-        mOnScrollListener = listener;
-        if (mRecyclerViewOnScrollListener != null) {
-            mRecyclerViewOnScrollListener.addOnScrollListener(mOnScrollListener);
-        }
-    }
-
-    @Override
     public void setOnScrollBottomListener(View contentView, OnScrollBottomListener onScrollBottomListener) {
         final RecyclerView recyclerView = (RecyclerView) contentView;
         mRecyclerViewOnScrollListener = new RecyclerViewOnScrollListener(onScrollBottomListener);
-        if (mOnScrollListener != null) {
-            mRecyclerViewOnScrollListener.addOnScrollListener(mOnScrollListener);
-        }
         recyclerView.addOnScrollListener(mRecyclerViewOnScrollListener);
     }
 
@@ -81,15 +69,10 @@ public class RecyclerViewHandler implements LoadMoreHandler {
      */
     private static class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener {
         private OnScrollBottomListener onScrollBottomListener;
-        private RecyclerView.OnScrollListener mOnScrollListener;
 
         public RecyclerViewOnScrollListener(OnScrollBottomListener onScrollBottomListener) {
             super();
             this.onScrollBottomListener = onScrollBottomListener;
-        }
-
-        public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
-            mOnScrollListener = listener;
         }
 
         @Override
@@ -98,9 +81,6 @@ public class RecyclerViewHandler implements LoadMoreHandler {
                 if (onScrollBottomListener != null) {
                     onScrollBottomListener.onScrollBottom();
                 }
-            }
-            if (mOnScrollListener != null) {
-                mOnScrollListener.onScrollStateChanged(recyclerView, newState);
             }
         }
 
@@ -118,9 +98,6 @@ public class RecyclerViewHandler implements LoadMoreHandler {
 
         @Override
         public void onScrolled(android.support.v7.widget.RecyclerView recyclerView, int dx, int dy) {
-            if (mOnScrollListener != null) {
-                mOnScrollListener.onScrolled(recyclerView, dx, dy);
-            }
         }
 
     }

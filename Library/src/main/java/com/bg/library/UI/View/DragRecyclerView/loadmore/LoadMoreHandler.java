@@ -1,6 +1,5 @@
 package com.bg.library.UI.View.DragRecyclerView.loadmore;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -17,8 +16,6 @@ public interface LoadMoreHandler {
      */
     boolean handleSetAdapter(View contentView, ILoadMoreView loadMoreView, OnClickListener
             onClickLoadMoreListener);
-
-    void addOnScrollListener(RecyclerView.OnScrollListener listener);
 
     void setOnScrollBottomListener(View contentView, OnScrollBottomListener onScrollBottomListener);
 

@@ -48,11 +48,6 @@ public class ListViewHandler implements LoadMoreHandler {
     }
 
     @Override
-    public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
-
-    }
-
-    @Override
     public void setOnScrollBottomListener(View contentView, OnScrollBottomListener onScrollBottomListener) {
         ListView listView = (ListView) contentView;
         listView.setOnScrollListener(new ListViewOnScrollListener(onScrollBottomListener));

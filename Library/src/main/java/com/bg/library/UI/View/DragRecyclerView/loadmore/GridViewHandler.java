@@ -79,11 +79,6 @@ public class GridViewHandler implements LoadMoreHandler {
     }
 
     @Override
-    public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
-
-    }
-
-    @Override
     public void setOnScrollBottomListener(View contentView, OnScrollBottomListener onScrollBottomListener) {
         GridViewWithHeaderAndFooter gridView = (GridViewWithHeaderAndFooter) contentView;
         gridView.setOnScrollListener(new GridViewOnScrollListener(onScrollBottomListener));
