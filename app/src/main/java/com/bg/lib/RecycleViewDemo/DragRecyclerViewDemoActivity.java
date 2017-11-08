@@ -68,10 +68,10 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                             mData.add(new String("  RecyclerView item  - " + i));
                         }
                         mAdapter.notifyDataSetChanged();
-                        dragRefreshLayout.refreshDone();
+                        dragRefreshLayout.refreshComplete();
                         dragRefreshLayout.setLoadMoreEnable(true);
                     }
-                }, 400);
+                }, 4000);
             }
         });
 

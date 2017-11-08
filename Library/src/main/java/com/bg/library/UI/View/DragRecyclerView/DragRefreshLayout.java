@@ -30,13 +30,10 @@ public class DragRefreshLayout extends DragFrameLayout {
         mDragRefreshHeader = new DragRefreshHeader(getContext());
         setHeaderView(mDragRefreshHeader);
         addDragUIHandler(mDragRefreshHeader);
+        setLoadingCycleTime(1500); // loading动画周期
 
         ILoadMoreViewFactory loadMoreViewFactory = new DefaultLoadMoreViewFooter();
         setFooterView(loadMoreViewFactory);
-    }
-
-    public void refreshDone() {
-        refreshComplete();
     }
 
     public DragRefreshHeader getHeader() {

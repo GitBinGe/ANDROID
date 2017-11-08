@@ -83,6 +83,7 @@ public class DragFrameLayout extends ViewGroup {
     private DragUIHandlerHook mRefreshCompleteHook;
 
     private int mLoadingMinTime = 1500;
+    private int mLoadingCycleTime = 0;
     private long mLoadingStartTime = 0;
     private DragIndicator mDragIndicator;
     private boolean mHasSendCancelEvent = false;
@@ -591,6 +592,14 @@ public class DragFrameLayout extends ViewGroup {
         return mStatus == DRAG_STATUS_LOADING;
     }
 
+    public void setLoadingCycleTime(int time) {
+        mLoadingCycleTime = time;
+    }
+
+    private int adjustDelayWithCycle(int delay) {
+        return delay + mLoadingCycleTime;
+    }
+
     /**
      * Call this when data is loaded.
      * The UI will perform complete at once or after a delay, depends on the time elapsed is greater then {@link #mLoadingMinTime} or not.
@@ -605,6 +614,11 @@ public class DragFrameLayout extends ViewGroup {
         }
 
         int delay = (int) (mLoadingMinTime - (System.currentTimeMillis() - mLoadingStartTime));
+
+        while (mLoadingCycleTime != 0 && delay <= 0) {
+            delay = adjustDelayWithCycle(delay);
+        }
+
         if (delay <= 0) {
             if (DEBUG) {
                 DragCLog.d(LOG_TAG, "performRefreshComplete at once");

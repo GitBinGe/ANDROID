@@ -50,7 +50,7 @@ public class SmileLoadingDrawable extends ShapeDrawable {
 
         animator = new ValueAnimation(1500);
         animator.setInterpolator(new CosInterpolator(0.5f));
-        animator.setRepeatCount(1);
+        animator.setRepeatCount(-1);
         animator.addUpdateListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
