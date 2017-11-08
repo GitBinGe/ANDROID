@@ -17,4 +17,11 @@ public interface DragHandler {
      * @param frame
      */
     void onRefreshBegin(final DragFrameLayout frame);
+
+    /**
+     * When Header close
+     *
+     * @param frame
+     */
+    void onHeaderClose(final DragFrameLayout frame);
 }

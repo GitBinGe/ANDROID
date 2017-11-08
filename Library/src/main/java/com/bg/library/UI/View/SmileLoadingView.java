@@ -38,7 +38,7 @@ public class SmileLoadingView extends View {
 
     @Override
     public void setBackgroundColor(@ColorInt int color) {
-
+        mSmileLoadingDrawable.setColor(color);
     }
 
     @Override

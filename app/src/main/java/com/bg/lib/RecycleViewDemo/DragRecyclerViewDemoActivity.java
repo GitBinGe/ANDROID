@@ -1,6 +1,7 @@
 package com.bg.lib.RecycleViewDemo;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.bg.lib.R;
 import com.bg.library.UI.Activity.PresenterActivity;
+import com.bg.library.UI.View.DragRecyclerView.DragClassicFrameLayout;
 import com.bg.library.UI.View.DragRecyclerView.DragDefaultHandler;
 import com.bg.library.UI.View.DragRecyclerView.DragFrameLayout;
 import com.bg.library.UI.View.DragRecyclerView.DragRefreshLayout;
@@ -62,16 +64,21 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        page = 0;
-                        mData.clear();
-                        for (int i = 0; i < 17; i++) {
-                            mData.add(new String("  RecyclerView item  - " + i));
-                        }
-                        mAdapter.notifyDataSetChanged();
                         dragRefreshLayout.refreshComplete();
-                        dragRefreshLayout.setLoadMoreEnable(true);
                     }
-                }, 4000);
+                }, 2200);
+            }
+
+            @Override
+            public void onHeaderClose(DragFrameLayout frame) {
+                page = 0;
+                mData.clear();
+                for (int i = 0; i < 17; i++) {
+                    mData.add(new String("  RecyclerView item  - " + i));
+                }
+                mAdapter.notifyDataSetChanged();
+                dragRefreshLayout.setLoadMoreEnable(true);
+                Toast.makeText(DragRecyclerViewDemoActivity.this, "onHeaderClose", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -10,6 +10,7 @@ import com.bg.library.UI.View.DragRecyclerView.loadmore.ILoadMoreViewFactory;
 public class DragRefreshLayout extends DragFrameLayout {
 
     private DragRefreshHeader mDragRefreshHeader;
+    private ILoadMoreViewFactory mLoadMoreViewFactory;
 
     public DragRefreshLayout(Context context) {
         super(context);
@@ -32,8 +33,14 @@ public class DragRefreshLayout extends DragFrameLayout {
         addDragUIHandler(mDragRefreshHeader);
         setLoadingCycleTime(1500); // loading动画周期
 
-        ILoadMoreViewFactory loadMoreViewFactory = new DefaultLoadMoreViewFooter();
-        setFooterView(loadMoreViewFactory);
+        mLoadMoreViewFactory = new DefaultLoadMoreViewFooter();
+        setFooterView(mLoadMoreViewFactory);
+    }
+
+    public void setHeadLoadingColor(int color) {
+        if (mDragRefreshHeader != null) {
+            mDragRefreshHeader.setLoadingColor(color);
+        }
     }
 
     public DragRefreshHeader getHeader() {

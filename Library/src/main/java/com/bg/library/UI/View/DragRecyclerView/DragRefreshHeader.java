@@ -40,6 +40,12 @@ public class DragRefreshHeader extends FrameLayout implements DragUIHandler {
 
     }
 
+    public void setLoadingColor(int color) {
+        if (mLoadingView != null) {
+            mLoadingView.setBackgroundColor(color);
+        }
+    }
+
 
     @Override
     public void onUIReset(DragFrameLayout frame) {

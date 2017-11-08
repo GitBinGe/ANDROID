@@ -42,7 +42,7 @@ public class DragFrameLayout extends ViewGroup {
     public final static byte DRAG_STATUS_COMPLETE = 4;
 
     private static final boolean DEBUG_LAYOUT = true;
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     private static int ID = 1;
 
     // auto refresh status
@@ -87,6 +87,7 @@ public class DragFrameLayout extends ViewGroup {
     private long mLoadingStartTime = 0;
     private DragIndicator mDragIndicator;
     private boolean mHasSendCancelEvent = false;
+    private boolean isClosingHead = false;
 
     public DragFrameLayout(Context context) {
         this(context, null);
@@ -641,6 +642,7 @@ public class DragFrameLayout extends ViewGroup {
      * Do refresh complete work when time elapsed is greater than {@link #mLoadingMinTime}
      */
     private void performRefreshComplete() {
+        isClosingHead = true;
         mStatus = DRAG_STATUS_COMPLETE;
 
         // if is auto refresh do nothing, wait scroller stop
@@ -1011,6 +1013,10 @@ public class DragFrameLayout extends ViewGroup {
         private void finish() {
             if (DEBUG) {
                 DragCLog.v(LOG_TAG, "finish, currentPos:%s", mDragIndicator.getCurrentPosY());
+            }
+            if (isClosingHead) {
+                isClosingHead = false;
+                mDragHandler.onHeaderClose(DragFrameLayout.this);
             }
             reset();
             onDragScrollFinish();
