@@ -67,7 +67,7 @@ public final class Http {
         if (params != null) {
             for (Map.Entry<String, Object> entry : params.entrySet()) {
                 String key = entry.getKey();
-                String value = entry.getValue().toString();
+                Object value = entry.getValue();
                 requestParams.append(key);
                 requestParams.append("=");
                 requestParams.append(value);
