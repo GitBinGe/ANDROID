@@ -55,10 +55,14 @@ public abstract class DataCenter {
      */
     private void initDataHandlers(List<Class<? extends DataHandler>> handlers) {
         for (Class<? extends DataHandler> cls : handlers) {
+            DataHandler handler = null;
             try {
-                DataHandler handler = cls.newInstance();
+                handler = cls.newInstance();
                 mOptionHandlers.add(handler);
-            } catch (Exception e) {
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
     }
