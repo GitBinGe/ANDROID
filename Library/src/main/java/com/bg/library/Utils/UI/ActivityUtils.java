@@ -1,14 +1,19 @@
 package com.bg.library.Utils.UI;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.bg.library.R;
+import com.bg.library.UI.Activity.SoftInputActivity;
+import com.bg.library.Utils.Log.LogUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -202,6 +207,37 @@ public class ActivityUtils {
             a.finish();
             a.overridePendingTransition(enter, close);
         }
+    }
+
+    /**
+     * 判断Activity是否在顶部
+     * @param context
+     * @param cls
+     * @return
+     */
+    public static boolean isTopActivity(Context context, Class cls) {
+        boolean isTop = false;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        try {
+            // LogUtils.d("isTopActivity top: " + cn.getClassName() + ", cls: " + cls);
+            if (cls.isAssignableFrom(Class.forName(cn.getClassName()))) {
+                isTop = true;
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        // LogUtils.d("isTopActivity isTop: " + isTop);
+        return isTop;
+    }
+
+    /**
+     * 判断Activity是否在顶部
+     * @param context
+     * @return
+     */
+    public static boolean isTopActivity(Context context) {
+        return isTopActivity(context, context.getClass());
     }
 }
 

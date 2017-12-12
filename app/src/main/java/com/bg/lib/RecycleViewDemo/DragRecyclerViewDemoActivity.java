@@ -41,6 +41,7 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
         setContentView(R.layout.activity_drag_recycler_view);
 
         dragRefreshLayout = (DragRefreshLayout) findViewById(R.id.test_recycler_view_frame);
+        dragRefreshLayout.setDurationToCloseHeader(500);
         mRecyclerView = (RecyclerView) findViewById(R.id.test_recycler_view);
         init();
     }
@@ -58,7 +59,7 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
             }
         }, 150);
 
-        dragRefreshLayout.setDragHandler(new DragNoneHandler() {
+        dragRefreshLayout.setDragHandler(new DragDefaultHandler() {
 
             @Override
             public void onRefreshBegin(DragFrameLayout frame) {

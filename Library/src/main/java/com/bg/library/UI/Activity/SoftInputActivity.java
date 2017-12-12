@@ -1,12 +1,17 @@
 package com.bg.library.UI.Activity;
 
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+
+import com.bg.library.Utils.UI.ActivityUtils;
 
 /**
  * Created by LooooG on 2017/10/12.
@@ -24,6 +29,8 @@ public class SoftInputActivity extends AnimActivity {
     protected OnSoftInputListener mListener; // 软键盘监听器
 
     protected boolean isObserveInputting = false; // 是否监听软键盘
+
+    private boolean isTopActivityLimited = true; // 是否限制Activity在顶部时才监听
 
     private static Handler sHandler;
 
@@ -46,6 +53,30 @@ public class SoftInputActivity extends AnimActivity {
      */
     public void hideSoftInput() {
         getImm().hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0); //强制隐藏键盘
+    }
+
+    /**
+     * 设置
+     * @param topActivityLimited
+     */
+    public void setTopActivityLimited(boolean topActivityLimited) {
+        isTopActivityLimited = topActivityLimited;
+    }
+
+    /**
+     * Activity是否在顶部
+     * @return
+     */
+    private boolean isTopActivity() {
+        return ActivityUtils.isTopActivity(this, SoftInputActivity.class);
+    }
+
+    /**
+     * “是否限制Activity在顶部时才监听”与“Activity是否在顶部”检查
+     * @return
+     */
+    private boolean isTopActivityCheck() {
+        return !isTopActivityLimited || isTopActivity();
     }
 
     /**
@@ -113,13 +144,13 @@ public class SoftInputActivity extends AnimActivity {
                 sHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (mListener != null) {
+                        if (mListener != null && isTopActivityCheck()) {
                             mListener.onSoftInputHide();
                         }
                     }
                 }, 200);
             } else {
-                if (mListener != null) {
+                if (mListener != null && isTopActivityCheck()) {
                     mListener.onSoftInputShow();
                 }
             }
