@@ -1,5 +1,7 @@
 package com.bg.library.Utils.Localize.DB;
 
+import android.text.TextUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,23 +11,49 @@ import java.util.Map;
 
 public class DB {
 
-    private static Map<String, DBTable> dbs;
+    private static DB db;
+
+    public static DB get() {
+        if (db == null) {
+            db = new DB();
+        }
+        return db;
+    }
+
+    public static DB get(String db) {
+        DB d = get();
+        d.open(db);
+        return d;
+    }
+
+    private Map<String, DBTable> tables;
+
+    private String dbName;
+
+    private DB() {
+        tables = new HashMap<>();
+    }
 
     /**
      * 打开数据库，并找到指定的表
+     *
      * @param db 数据库名字
      * @return
      */
-    public static DBTable open(String db) {
-        if (dbs == null) {
-            dbs = new HashMap<>();
+    private DB open(String db) {
+        dbName = db;
+        return this;
+    }
+
+    public DBTable table(String table) {
+        String db = TextUtils.isEmpty(dbName) ? "default" : dbName;
+        String key = db + "_" + table;
+        DBTable t = tables.get(key);
+        if (t == null) {
+            t = new DBTable(db, table);
+            tables.put(key, t);
         }
-        DBTable table = dbs.get(db);
-        if (table == null) {
-            table = new DBTable(db);
-            dbs.put(db, table);
-        }
-        return table;
+        return t;
     }
 
 }
