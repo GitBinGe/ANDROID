@@ -195,6 +195,17 @@ public final class Http {
     }
 
     /**
+     * 下载文件
+     *
+     * @param urlString
+     * @param toDir
+     * @return
+     */
+    public static String downFile(String urlString, String toDir, String fileName) {
+        return null;
+    }
+
+    /**
      * 下载图片
      *
      * @param urlString
