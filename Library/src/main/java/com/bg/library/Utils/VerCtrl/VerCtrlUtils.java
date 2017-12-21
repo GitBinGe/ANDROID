@@ -68,7 +68,19 @@ public class VerCtrlUtils {
                     Cursor c = mDownloadManager.query(query);
                     if (c.moveToFirst()) {
                         // 获取文件下载路径
-                        String apkPath = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+                        int fileUriIdx = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+                        String fileUri = c.getString(fileUriIdx);
+                        String apkPath = "";
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            if (fileUri != null) {
+                                apkPath = Uri.parse(fileUri).getPath();
+                            }
+                        } else {
+                            //Android 7.0以上的方式：请求获取写入权限，这一步报错
+                            //过时的方式：DownloadManager.COLUMN_LOCAL_FILENAME
+                            int fileNameIdx = c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+                            apkPath = c.getString(fileNameIdx);
+                        }
                         if (!apkPath.isEmpty()) {
                             if (mListener != null) {
                                 mListener.onSuccess(apkPath);
@@ -86,13 +98,13 @@ public class VerCtrlUtils {
                     if (c != null) {
                         c.close();
                     }
+                    // 注销下载完成广播接收
+                    context.unregisterReceiver(mReceiver);
+                    // 注销内容观察者
+                    context.getContentResolver().unregisterContentObserver(mObserver);
+                    // 注销下载状态回调
+                    setVersionDownloadListener(null);
                 }
-                // 注销下载完成广播接收
-                context.unregisterReceiver(mReceiver);
-                // 注销内容观察者
-                context.getContentResolver().unregisterContentObserver(mObserver);
-                // 注销下载状态回调
-                setVersionDownloadListener(null);
             }
         };
         // 内容观察者
