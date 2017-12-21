@@ -135,6 +135,21 @@ public class VerCtrlUtils {
      * @param authority
      * @return
      */
+    public long downloadApk(Context context, String url, boolean showNotification, String authority, VersionDownloadListener listener) {
+        mListener = listener;
+        mAuthrity = authority;
+        return downloadApk(context, url, showNotification);
+    }
+
+    /**
+     * 下载更新程序
+     *
+     * @param context
+     * @param url
+     * @param showNotification
+     * @param authority
+     * @return
+     */
     public long downloadApk(Context context, String url, boolean showNotification, String authority) {
         mAuthrity = authority;
         return downloadApk(context, url, showNotification);
@@ -159,9 +174,19 @@ public class VerCtrlUtils {
                 DownloadManager.Request.VISIBILITY_HIDDEN);
         String name = url.substring(url.lastIndexOf("/") + 1);
         File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), name);
+        if (file.exists()) {
+            if (mListener != null) {
+                mListener.onSuccess(file.getPath());
+            }
+            startInstall(context, file);
+            return 0;
+        }
         request.setDestinationUri(Uri.fromFile(file));
         mDownloadId = mDownloadManager.enqueue(request);
         LogUtils.d("VersionControl >> 开始下载");
+        if (mListener != null) {
+            mListener.onStart(file.getPath());
+        }
         // 注册内容观察者
         context.getContentResolver().registerContentObserver(Uri.parse("content://downloads/my_downloads"),
                 true, mObserver);
@@ -262,6 +287,7 @@ public class VerCtrlUtils {
      * 版本下载状态监听器
      */
     public interface VersionDownloadListener {
+        void onStart(String apkPath);
         void onSuccess(String apkPath);
         void onProgress(int totalBytes, int downloadSoFar);
         void onFailed();
