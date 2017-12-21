@@ -191,10 +191,8 @@ public class VerCtrlUtils {
         context.getContentResolver().registerContentObserver(Uri.parse("content://downloads/my_downloads"),
                 true, mObserver);
         // 注册下载完成广播接收
-        if (!showNotification) {
-            context.getApplicationContext().registerReceiver(mReceiver,
-                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        }
+        context.getApplicationContext().registerReceiver(mReceiver,
+                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         return mDownloadId;
     }
 
