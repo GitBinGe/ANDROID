@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Created by BinGe on 2017/8/31.
- * 用于封装json数据
+ * 用于封装json数据，项目代码可以去掉过多的try catch
  */
 
 public class JSON extends BaseObject {

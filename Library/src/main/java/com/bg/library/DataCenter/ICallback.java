@@ -7,6 +7,10 @@ package com.bg.library.DataCenter;
 
 public interface ICallback {
 
+    /**
+     * @param operation 操作的名称
+     * @param data  操作后返回的数据
+     */
     void onCallback(String operation, Data data);
 
 }

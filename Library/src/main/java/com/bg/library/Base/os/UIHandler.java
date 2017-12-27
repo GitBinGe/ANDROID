@@ -9,7 +9,7 @@ import com.bg.library.Base.Objects.BaseObject;
 
 /**
  * Created by BinGe on 2017/8/31.
- * handler类，有子线程和主线程处理能力
+ * handler类，有子线程和主线程处理能力，可以替代系统的handler工作
  */
 
 public class UIHandler extends BaseObject {

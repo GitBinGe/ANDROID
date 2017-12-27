@@ -39,6 +39,10 @@ public abstract class DataCenter {
         initDataHandlers(getOptionHandlers());
     }
 
+    /**
+     * 可以修改数据中心默认的线程池数量
+     * @param threadCount
+     */
     public void setThreadCount(int threadCount) {
         mThreadPool.shutdown();
         mThreadPool = Executors.newFixedThreadPool(threadCount);

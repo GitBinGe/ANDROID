@@ -9,9 +9,9 @@ public interface IParser {
 
     /**
      * 数据中心在处理完一个操作后会有一份原始数据，数据会由这个方法进行解析
-     * @param operation
-     * @param data
-     * @return
+     * @param operation 操作的名称
+     * @param data  需求解析的数据
+     * @return  返回解析后的数据
      */
     Data parse(String operation, Data data);
 

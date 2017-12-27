@@ -158,7 +158,7 @@ public class BitmapUtils {
         }
 
         int bitWidth = srcBitmap.getWidth();
-        int bitHight = srcBitmap.getHeight();
+        int bitHeight = srcBitmap.getHeight();
 
         BitmapShader bitmapShader = new BitmapShader(srcBitmap,
                 Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
@@ -166,9 +166,9 @@ public class BitmapUtils {
         paint.setAntiAlias(true);
         paint.setShader(bitmapShader);
 
-        RectF rectf = new RectF(0, 0, bitWidth, bitHight);
+        RectF rectf = new RectF(0, 0, bitWidth, bitHeight);
 
-        Bitmap outBitmap = Bitmap.createBitmap(bitWidth, bitHight,
+        Bitmap outBitmap = Bitmap.createBitmap(bitWidth, bitHeight,
                 Config.ARGB_8888);
         Canvas canvas = new Canvas(outBitmap);
         canvas.drawRoundRect(rectf, ret, ret, paint);

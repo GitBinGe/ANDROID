@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * Created by BinGe on 2017/9/8.
+ * 数据以及操作的处理器，项目中用时继承这个类，实现相应的接口
  */
 
 public abstract class DataHandler {

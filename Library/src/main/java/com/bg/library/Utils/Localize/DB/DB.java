@@ -7,12 +7,17 @@ import java.util.Map;
 
 /**
  * Created by BinGe on 2017/12/13.
+ * 数据库工具类
  */
 
 public class DB {
 
     private static DB db;
 
+    /**
+     * 默认数据库default.db
+     * @return
+     */
     public static DB get() {
         if (db == null) {
             db = new DB();
@@ -20,6 +25,11 @@ public class DB {
         return db;
     }
 
+    /**
+     * 数据库
+     * @param db 数据库字句
+     * @return
+     */
     public static DB get(String db) {
         DB d = get();
         d.open(db);
