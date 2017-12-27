@@ -3,6 +3,7 @@ package com.bg.library.Utils.Localize.DB;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.bg.library.Base.os.SystemInfo;
 
@@ -10,6 +11,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,12 +53,15 @@ public class DBTable {
 
     public boolean set(String key, String value) {
         ContentValues cv = new ContentValues();
-        cv.put(key, value);
+        cv.put("key", key);
+        cv.put("value", value);
+        long set;
         if (get(key) == null) {
-            return db.insert(table, null, cv) > 0;
+            set = db.insert(table, null, cv);
         } else {
-            return db.update(table, cv, "key=?", new String[]{key}) > 0;
+            set = db.update(table, cv, "key=?", new String[]{key});
         }
+        return set > 0;
     }
 
     public String get(String key) {
@@ -64,26 +69,29 @@ public class DBTable {
         Cursor c = db.query(table, null, "key=?", new String[]{key}, null, null, null);
         if (c != null) {
             if (c.moveToFirst()) {
-                value = c.getString(1);
+                value = c.getString(c.getColumnIndex("value"));
             }
             c.close();
         }
         return value;
     }
 
-    public List<String> getAll() {
-        List<String> list = new ArrayList<>();
+    public Map<String, String> getAll() {
+        Map<String, String> all = new LinkedHashMap<>();
         Cursor c = db.query(table, null, null, null, null, null, null);
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
-                    String value = c.getString(1);
-                    list.add(value);
+                    String key = c.getString(c.getColumnIndex("key"));
+                    String value = c.getString(c.getColumnIndex("value"));
+                    if (!TextUtils.isEmpty(key)) {
+                        all.put(key, value);
+                    }
                 } while (c.moveToNext());
             }
             c.close();
         }
-        return list;
+        return all;
     }
 
     public boolean remove(String key) {

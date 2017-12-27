@@ -20,9 +20,6 @@ public class MainActivity extends PresenterActivity {
         titleView.setUnit(TitleView.Unit.BACK | TitleView.Unit.TEXT | TitleView.Unit.ADD);
         titleView.setColor(Color.BLACK);
         titleView.setTitle("Main Activity Title");
-
-        DBTable table = DB.get().table("search");
-
     }
 
 }
