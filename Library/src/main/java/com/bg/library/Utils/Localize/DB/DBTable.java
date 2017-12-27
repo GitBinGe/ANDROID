@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by BinGe on 2017/12/15.
@@ -21,16 +24,25 @@ import java.util.Map;
 
 public class DBTable {
 
+    private static ExecutorService singleThread;
+
     private static Map<String, SQLiteDatabase> dbs;
 
     private SQLiteDatabase db;
     private String table;
+    private Map<String, String> cache;
 
     DBTable(String db, String table) {
+        if (singleThread == null) {
+            singleThread = Executors.newSingleThreadExecutor();
+        }
+
         this.table = table;
+
         if (dbs == null) {
             dbs = new HashMap<>();
         }
+
         SQLiteDatabase database = dbs.get(db);
         if (database == null) {
             String path = "/data/data/" + SystemInfo.PackageName + "/databases/";
@@ -49,34 +61,53 @@ public class DBTable {
         );
         database.execSQL(sb.toString());
         this.db = database;
+        this.cache = getAllFromDB();
     }
 
-    public boolean set(String key, String value) {
-        ContentValues cv = new ContentValues();
-        cv.put("key", key);
-        cv.put("value", value);
-        long set;
-        if (get(key) == null) {
-            set = db.insert(table, null, cv);
-        } else {
-            set = db.update(table, cv, "key=?", new String[]{key});
+    public boolean set(final String key, final String value) {
+        if (key == null) {
+            return false;
         }
-        return set > 0;
+
+        this.cache.put(key, value);
+        singleThread.execute(new Runnable() {
+            @Override
+            public void run() {
+                ContentValues cv = new ContentValues();
+                cv.put("key", key);
+                cv.put("value", value);
+                if (get(key) == null) {
+                    db.insert(table, null, cv);
+                } else {
+                    db.update(table, cv, "key=?", new String[]{key});
+                }
+            }
+        });
+        return true;
     }
 
     public String get(String key) {
-        String value = null;
-        Cursor c = db.query(table, null, "key=?", new String[]{key}, null, null, null);
-        if (c != null) {
-            if (c.moveToFirst()) {
-                value = c.getString(c.getColumnIndex("value"));
-            }
-            c.close();
-        }
-        return value;
+        return this.cache.get(key);
     }
 
     public Map<String, String> getAll() {
+        return this.cache;
+    }
+
+    public boolean remove(final String key) {
+        if (TextUtils.isEmpty(key)) {
+            return false;
+        }
+        singleThread.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.delete(table, "key=?", new String[]{key});
+            }
+        });
+        return this.cache.remove(key) != null;
+    }
+
+    private Map<String, String> getAllFromDB() {
         Map<String, String> all = new LinkedHashMap<>();
         Cursor c = db.query(table, null, null, null, null, null, null);
         if (c != null) {
@@ -92,10 +123,6 @@ public class DBTable {
             c.close();
         }
         return all;
-    }
-
-    public boolean remove(String key) {
-        return db.delete(table, "key=?", new String[]{key}) > 0;
     }
 
 
