@@ -15,6 +15,11 @@ import java.io.File;
 public class SystemInfo {
 
     /**
+     * App名称
+     */
+    public static String AppName;
+
+    /**
      * App文件路径
      */
     public static String AppFilePath;
@@ -60,6 +65,7 @@ public class SystemInfo {
      * @param context
      */
     public static void initialize(Context context) {
+        AppName = getAppName(context);
         AppFilePath = getAppFilesPath(context);
         SDCardFilePath = getSDCardFilesPath(context);
         ImageCacheDir = getImageCacheDir(context);
@@ -70,7 +76,7 @@ public class SystemInfo {
         Screen = new Screen(context);
 
         Log.d("SystemInfo",
-                        "\n" + "Android  ID : " + AndroidID +
+                "\n" + "Android  ID : " + AndroidID +
                         "\n" + "VersionName : " + VersionName +
                         "\n" + "VersionCode : " + VersionCode +
                         "\n"
@@ -97,6 +103,20 @@ public class SystemInfo {
             e.printStackTrace();
         }
         return versionName;
+    }
+
+    /**
+     * 获取应用程序名称
+     */
+    public static String getAppName(Context context) {
+        try {
+            int labelRes = context.getPackageManager().
+                    getPackageInfo(context.getPackageName(), 0).applicationInfo.labelRes;
+            return context.getResources().getString(labelRes);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
