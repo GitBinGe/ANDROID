@@ -91,7 +91,7 @@ public class DBTable {
     }
 
     public Map<String, String> getAll() {
-        return this.cache;
+        return new LinkedHashMap<>(this.cache);
     }
 
     public boolean remove(final String key) {

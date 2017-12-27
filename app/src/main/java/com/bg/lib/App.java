@@ -26,7 +26,7 @@ public class App extends Application {
 //        DB.get().table("history").set("3", "1234567");
 //        DB.get().table("history").set("4", "1234567");
 
-//        DB.get().table("history").remove("4");
+        DB.get().table("history").remove("4");
 
         String value1 = DB.get().table("history").get("1");
         String value2 = DB.get().table("history").get("2");
