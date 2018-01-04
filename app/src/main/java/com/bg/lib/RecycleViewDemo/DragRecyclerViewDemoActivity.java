@@ -14,16 +14,13 @@ import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bg.lib.R;
+import com.bg.library.Base.os.UIHandler;
 import com.bg.library.UI.Activity.PresenterActivity;
-import com.bg.library.UI.View.DragRecyclerView.DragClassicFrameLayout;
 import com.bg.library.UI.View.DragRecyclerView.DragDefaultHandler;
 import com.bg.library.UI.View.DragRecyclerView.DragFrameLayout;
-import com.bg.library.UI.View.DragRecyclerView.DragNoneHandler;
 import com.bg.library.UI.View.DragRecyclerView.DragRefreshLayout;
 import com.bg.library.UI.View.DragRecyclerView.loadmore.OnLoadMoreListener;
 import com.bg.library.UI.View.DragRecyclerView.recyclerview.RecyclerAdapterWithHF;
@@ -46,6 +43,8 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
     Map<String, BitmapRegionDecoder> map;
     LruCache<String, Bitmap> bitmapLruCache;
 
+    UIHandler uiHandler;
+
     int page = 0;
 
     @Override
@@ -54,12 +53,13 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
         setContentView(R.layout.activity_drag_recycler_view);
         map = new HashMap<>();
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
-        bitmapLruCache = new LruCache<String, Bitmap>(maxMemory / 6) {
+        bitmapLruCache = new LruCache<String, Bitmap>(maxMemory / 12 / 2) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
                 return value.getRowBytes() * value.getHeight() / 1024 / 1024;
             }
         };
+        uiHandler = new UIHandler("test");
 
         dragRefreshLayout = (DragRefreshLayout) findViewById(R.id.test_recycler_view_frame);
         dragRefreshLayout.setDurationToCloseHeader(500);
@@ -183,8 +183,8 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            ChildViewHolder holder = (ChildViewHolder) viewHolder;
-            ImageItem item = items.get(position);
+            final ChildViewHolder holder = (ChildViewHolder) viewHolder;
+            final ImageItem item = items.get(position);
             String path = datas.get(item.index);
             BitmapRegionDecoder regionDecoder = map.get(path);
             if (regionDecoder == null || regionDecoder.isRecycled()) {
@@ -197,16 +197,33 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                     holder.item.setBackgroundColor(Color.RED);
                 }
             }
-            String key = item.path + "_" + position;
+            final String key = item.path + "_" + position;
             Bitmap bitmap = bitmapLruCache.get(key);
             if (bitmap == null) {
                 if (regionDecoder != null) {
-                    bitmap = regionDecoder.decodeRegion(item.rect, null);
-                    bitmapLruCache.put(key, bitmap);
+                    final BitmapRegionDecoder region = regionDecoder;
+                    uiHandler.runOnChildThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            long time = System.currentTimeMillis();
+                            final Bitmap bitmap = region.decodeRegion(item.rect, null);
+                            LogUtils.d("加载时间：" + (System.currentTimeMillis() - time));
+                            uiHandler.runOnMainThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    bitmapLruCache.put(key, bitmap);
+                                    holder.item.setRect(item.rect);
+                                    holder.item.setImageBitmap(bitmap);
+                                }
+                            });
+                        }
+                    });
+
                 }
+            } else {
+                holder.item.setRect(item.rect);
+                holder.item.setImageBitmap(bitmap);
             }
-            holder.item.setRect(item.rect);
-            holder.item.setImageBitmap(bitmap);
         }
 
         @Override
