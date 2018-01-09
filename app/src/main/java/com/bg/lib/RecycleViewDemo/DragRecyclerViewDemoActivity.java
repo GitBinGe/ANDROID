@@ -159,20 +159,21 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                         for (int j = 0; j < size; j++) {
                             ImageItem item = new ImageItem();
                             item.index = i;
-                            items.add(item);
                             item.rect = new Rect(0, j * width, width, (j + 1) * width);
+                            items.add(item);
                         }
                         int last = height % width;
                         if (last > 0) {
                             ImageItem item = new ImageItem();
                             item.index = i;
-                            items.add(item);
                             item.rect = new Rect(0, size * width, width, height);
+                            items.add(item);
                         }
                     } else {
                         ImageItem item = new ImageItem();
                         item.index = i;
                         item.rect = new Rect(0, 0, width, height);
+                        items.add(item);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

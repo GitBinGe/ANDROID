@@ -30,14 +30,14 @@ public class CutImageView extends AppCompatImageView {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         if (mRect == null) {
             setMeasuredDimension(widthSize, widthSize);
-            LogUtils.d("height size  : " + widthSize);
+//            LogUtils.d("height size  : " + widthSize);
         } else {
             float scale =  mRect.width() / (float)widthSize;
             int height = (int) (mRect.height() / scale);
             setMeasuredDimension(widthSize, height);
-            LogUtils.d("height size  : " + height);
+//            LogUtils.d("height size  : " + height);
         }
-        LogUtils.d("rect : " + mRect);
+//        LogUtils.d("rect : " + mRect);
     }
 
     public void setRect(Rect rect) {

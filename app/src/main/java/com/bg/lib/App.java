@@ -3,6 +3,7 @@ package com.bg.lib;
 import android.app.Application;
 
 import com.bg.library.Library;
+import com.bg.library.Utils.Image.ImageCache;
 import com.bg.library.Utils.Localize.DB.DB;
 import com.bg.library.Utils.Log.LogUtils;
 
@@ -20,6 +21,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Library.initialize(this);
+        ImageCache.get().setMaxSize(20);
 
 //        DB.get().table("history").set("1", "1234567");
 //        DB.get().table("history").set("2", "1234567");

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 
 import com.bg.library.UI.Activity.PresenterActivity;
+import com.bg.library.Utils.Image.ImageCache;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,21 +41,28 @@ public class MainActivity extends PresenterActivity {
 
 //        setContentView(sv);
 
-        final ImageView iv = new ImageView(this);
-        iv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    InputStream is = getAssets().open("test/111.jpg");
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    iv.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        final ImageView iv = new ImageView(this);
+//        iv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    InputStream is = getAssets().open("test/111.jpg");
+//                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                    iv.setImageBitmap(bitmap);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        setContentView(iv);
 
-        setContentView(iv);
+        try {
+            Bitmap bitmap = BitmapFactory.decodeStream(getAssets().open("test/test.jpg"), null, null);
+            ImageCache.get().put("test", bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
