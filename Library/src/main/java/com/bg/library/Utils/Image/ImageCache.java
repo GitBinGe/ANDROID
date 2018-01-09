@@ -28,7 +28,7 @@ public class ImageCache {
         lruCache = new LruCache<String, Bitmap>((int) (maxMemory * 0.2f)) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
-                LogUtils.d("Image size is " + (value.getRowBytes() * value.getHeight() / 1024 / 1024));
+                LogUtils.d("ImageCache : Image size is " + (value.getRowBytes() * value.getHeight() / 1024 / 1024));
                 return value.getRowBytes() * value.getHeight();
             }
         };
@@ -39,7 +39,7 @@ public class ImageCache {
      */
     public void setMaxSize(float percent) {
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() * percent / 100f);
-        LogUtils.d("Runtime memory is " + (Runtime.getRuntime().maxMemory() / 1024 / 1024)
+        LogUtils.d("ImageCache : Runtime memory is " + (Runtime.getRuntime().maxMemory() / 1024 / 1024)
                 + ", Image Cache max size is " + (maxMemory / 1024 / 1024));
         lruCache.resize(maxMemory);
     }
