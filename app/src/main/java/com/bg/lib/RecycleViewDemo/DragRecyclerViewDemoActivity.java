@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bg.lib.R;
+import com.bg.library.Base.os.SystemInfo;
 import com.bg.library.Base.os.UIHandler;
 import com.bg.library.UI.Activity.PresenterActivity;
 import com.bg.library.UI.View.DragRecyclerView.DragDefaultHandler;
@@ -152,6 +153,9 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;
                     BitmapFactory.decodeStream(is, null, options);
+
+                    options.inJustDecodeBounds = false;
+                    options.inSampleSize = 1;
                     int width = options.outWidth;
                     int height = options.outHeight;
                     if (height > width * 2) {
@@ -160,19 +164,31 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                             ImageItem item = new ImageItem();
                             item.index = i;
                             item.rect = new Rect(0, j * width, width, (j + 1) * width);
+                            item.options = options;
                             items.add(item);
+                            while ((width / item.options.inSampleSize) > SystemInfo.Screen.width) {
+                                item.options.inSampleSize += 1;
+                            }
                         }
                         int last = height % width;
                         if (last > 0) {
                             ImageItem item = new ImageItem();
                             item.index = i;
+                            item.options = options;
                             item.rect = new Rect(0, size * width, width, height);
                             items.add(item);
+                            while ((width / item.options.inSampleSize) > SystemInfo.Screen.width) {
+                                item.options.inSampleSize += 1;
+                            }
                         }
                     } else {
                         ImageItem item = new ImageItem();
                         item.index = i;
                         item.rect = new Rect(0, 0, width, height);
+                        item.options = options;
+                        while ((width / item.options.inSampleSize) > SystemInfo.Screen.width) {
+                            item.options.inSampleSize += 1;
+                        }
                         items.add(item);
                     }
                 } catch (IOException e) {
@@ -206,9 +222,9 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
                     uiHandler.runOnChildThread(new Runnable() {
                         @Override
                         public void run() {
-                            long time = System.currentTimeMillis();
-                            final Bitmap bitmap = region.decodeRegion(item.rect, null);
-                            LogUtils.d("加载时间：" + (System.currentTimeMillis() - time));
+                            final Bitmap bitmap = region.decodeRegion(item.rect, item.options);
+                            int size = bitmap.getRowBytes() * bitmap.getHeight() / 1024;
+                            LogUtils.d("加载图片：" + bitmap.getWidth() + "x" + bitmap.getHeight() + "=" + size + "KB");
                             uiHandler.runOnMainThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -250,6 +266,7 @@ public class DragRecyclerViewDemoActivity extends PresenterActivity {
         String path;
         int index;
         Rect rect;
+        BitmapFactory.Options options;
     }
 
 }

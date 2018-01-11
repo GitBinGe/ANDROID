@@ -2,6 +2,8 @@ package com.bg.lib;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -24,23 +26,18 @@ public class MainActivity extends PresenterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeStream(getAssets().open("test/test.jpg"), null, null);
-                    int index = 0;
-                    while (true) {
-                        String key = "test" + index++;
-                        ImageCache.get().put(key, bitmap);
-                        SystemClock.sleep(2000);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-
+        try {
+            BitmapRegionDecoder regionDecoder = BitmapRegionDecoder.newInstance(getAssets().open("test/00.jpg"), true);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 3;
+            Bitmap bitmap = regionDecoder.decodeRegion(new Rect(0, 0, 1920, 2000), options);
+            int size = bitmap.getRowBytes() * bitmap.getHeight();
+            LogUtils.d("size : " + size / 1024f);
+            ImageView iv = (ImageView) findViewById(R.id.image_test);
+            iv.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
