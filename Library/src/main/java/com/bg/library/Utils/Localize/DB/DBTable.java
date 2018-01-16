@@ -31,6 +31,7 @@ public class DBTable {
     private SQLiteDatabase db;
     private String table;
     private Map<String, String> cache;
+    private Map<String, String> dbCache;
 
     DBTable(String db, String table) {
         if (singleThread == null) {
@@ -61,7 +62,11 @@ public class DBTable {
         );
         database.execSQL(sb.toString());
         this.db = database;
-        this.cache = getAllFromDB();
+
+        Map<String, String> history = getAllFromDB();
+        this.cache = new HashMap<>(history);
+        this.dbCache = new HashMap<>(history);
+
     }
 
     public boolean set(final String key, final String value) {
@@ -76,10 +81,18 @@ public class DBTable {
                 ContentValues cv = new ContentValues();
                 cv.put("key", key);
                 cv.put("value", value);
-                if (get(key) == null) {
-                    db.insert(table, null, cv);
+                if (dbCache.get(key) == null) {
+                    if (db.insert(table, null, cv) > 0) {
+                        dbCache.put(key, value);
+                    } else {
+                        cache.remove(key);
+                    }
                 } else {
-                    db.update(table, cv, "key=?", new String[]{key});
+                    if (db.update(table, cv, "key=?", new String[]{key}) > 0) {
+                        dbCache.put(key, value);
+                    } else {
+                        cache.put(key, dbCache.get(key));
+                    }
                 }
             }
         });
