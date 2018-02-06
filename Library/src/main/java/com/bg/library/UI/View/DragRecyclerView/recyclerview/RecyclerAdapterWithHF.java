@@ -106,6 +106,15 @@ public class RecyclerAdapterWithHF extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public final void onBindViewHolder(final RecyclerView.ViewHolder vh, int position) {
+        handlerBindViewHolder(vh, position, null);
+    }
+
+    @Override
+    public final void onBindViewHolder(final RecyclerView.ViewHolder vh, int position, List<Object> payloads) {
+        handlerBindViewHolder(vh, position, payloads);
+    }
+
+    private void handlerBindViewHolder(final RecyclerView.ViewHolder vh, int position, List<Object> payloads) {
         // check what type of view our position is
         if (isHeader(position)) {
             View v = mHeaders.get(position);
@@ -119,7 +128,7 @@ public class RecyclerAdapterWithHF extends RecyclerView.Adapter<RecyclerView.Vie
             vh.itemView.setOnClickListener(new MyOnClickListener(vh));
             vh.itemView.setOnLongClickListener(new MyOnLongClickListener(vh));
             // it's one of our items, display as required
-            onBindViewHolderHF(vh, getRealPosition(position));
+            onBindViewHolderHF(vh, getRealPosition(position), payloads);
         }
     }
 
@@ -127,8 +136,12 @@ public class RecyclerAdapterWithHF extends RecyclerView.Adapter<RecyclerView.Vie
         return position - mHeaders.size();
     }
 
-    public void onBindViewHolderHF(ViewHolder vh, int position) {
-        mAdapter.onBindViewHolder(vh, position);
+    public void onBindViewHolderHF(ViewHolder vh, int position, List<Object> payloads) {
+        if (payloads != null) {
+            mAdapter.onBindViewHolder(vh, position, payloads);
+        } else {
+            mAdapter.onBindViewHolder(vh, position);
+        }
     }
 
     private void prepareHeaderFooter(HeaderFooterViewHolder vh, View view) {
@@ -347,5 +360,39 @@ public class RecyclerAdapterWithHF extends RecyclerView.Adapter<RecyclerView.Vie
         }
     };
 
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        mAdapter.onViewRecycled(holder);
+        super.onViewRecycled(holder);
+    }
 
+    @Override
+    public boolean onFailedToRecycleView(ViewHolder holder) {
+        mAdapter.onFailedToRecycleView(holder);
+        return super.onFailedToRecycleView(holder);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        mAdapter.onAttachedToRecyclerView(recyclerView);
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        mAdapter.onDetachedFromRecyclerView(recyclerView);
+        super.onDetachedFromRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(ViewHolder holder) {
+        mAdapter.onViewAttachedToWindow(holder);
+        super.onViewAttachedToWindow(holder);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        mAdapter.onViewDetachedFromWindow(holder);
+        super.onViewDetachedFromWindow(holder);
+    }
 }
