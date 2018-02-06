@@ -345,6 +345,11 @@ public class RecyclerAdapterWithHF extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
         @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            notifyItemRangeChanged(positionStart + getHeadSize(), itemCount, payload);
+        }
+
+        @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
             notifyItemRangeInserted(positionStart + getHeadSize(), itemCount);
         }
