@@ -1179,7 +1179,9 @@ public class DragFrameLayout extends ViewGroup {
     }
 
     public void setNoMoreData() {
-        mLoadMoreView.showNomore();
+        if (mLoadMoreView != null) {
+            mLoadMoreView.showNomore();
+        }
     }
 
     public boolean isLoadingMore() {
