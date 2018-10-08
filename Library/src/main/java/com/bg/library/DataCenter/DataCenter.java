@@ -31,6 +31,17 @@ public abstract class DataCenter {
     private List<DataHandler> mOptionHandlers = new ArrayList<>();
 
     /**
+     * 公共处理器
+     */
+    private DataHandler mCommonHandler = new DataHandler(){
+
+        @Override
+        public Data getData() {
+            return null;
+        }
+    };
+
+    /**
      * 私有构造方法
      */
     protected DataCenter() {
@@ -41,6 +52,7 @@ public abstract class DataCenter {
 
     /**
      * 可以修改数据中心默认的线程池数量
+     *
      * @param threadCount
      */
     public void setThreadCount(int threadCount) {
@@ -50,14 +62,40 @@ public abstract class DataCenter {
 
     /**
      * 返回需要初始化的Handler列表
+     *
      * @return
      */
     public abstract ArrayList<Class<? extends DataHandler>> getOptionHandlers();
+
+
+    /**
+     * 绑定执行者到公共的处理器，ATM原理
+     * @param operation
+     * @param performer
+     * @return
+     */
+    public boolean bindOperation(String operation, IPerformer performer) {
+        return mCommonHandler.bindOperation(operation, performer);
+    }
+
+    /**
+     * 绑定数据处理器到公共的处理器，ATM原理
+     * @param operation
+     * @param parser
+     * @return
+     */
+    public boolean bindDataParser(String operation, IParser parser) {
+        return mCommonHandler.bindDataParser(operation, parser);
+    }
+
 
     /**
      * 初始化处理器
      */
     private void initDataHandlers(List<Class<? extends DataHandler>> handlers) {
+
+        mOptionHandlers.add(mCommonHandler);
+
         for (Class<? extends DataHandler> cls : handlers) {
             DataHandler handler = null;
             try {
