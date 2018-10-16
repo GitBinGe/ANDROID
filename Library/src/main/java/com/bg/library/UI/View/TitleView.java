@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,13 +20,16 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bg.library.UI.Animation.ValueAnimation;
 import com.bg.library.UI.Drawable.AddDrawable;
 import com.bg.library.UI.Drawable.BackDrawable;
 import com.bg.library.UI.Drawable.CloseDrawable;
 import com.bg.library.UI.Drawable.ListDrawable;
+import com.bg.library.UI.Drawable.LoadingDrawable;
 import com.bg.library.UI.Drawable.MenuDrawable;
 import com.bg.library.UI.Drawable.SearchDrawable;
 import com.bg.library.UI.Drawable.ShapeDrawable;
+import com.bg.library.UI.Drawable.SmileLoadingDrawable;
 import com.bg.library.UI.Drawable.SureDrawable;
 
 /**
@@ -48,7 +52,9 @@ public class TitleView extends FrameLayout implements View.OnClickListener {
     }
 
     private Paint mPaint;
+    private FrameLayout mMiddle;
     private TextView mTextView;//title
+    private View mLoading;
 
     private LinearLayout mLeft;//左边按钮的容器
     private TextView mBackView;//返回按钮
@@ -87,6 +93,19 @@ public class TitleView extends FrameLayout implements View.OnClickListener {
         float scale = dm.density;
         mPaint.setStrokeWidth(scale);
 
+        //中间容器，显示标题跟loading
+        mMiddle = new FrameLayout(getContext());
+//        mMiddle.setBackgroundColor(Color.RED);
+        final LayoutParams mParams = new LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+        int p = (int) (70 * scale);
+        mParams.leftMargin = p;
+        mParams.rightMargin = p;
+        addView(mMiddle, mParams);
+
+        p = (int) (16 * scale);
+
+        //标题
         mTextView = new TextView(getContext());
         Object tag = getTag();
         if (tag != null && tag instanceof String) {
@@ -94,13 +113,25 @@ public class TitleView extends FrameLayout implements View.OnClickListener {
         }
         mTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         mTextView.setSingleLine();
+        mTextView.setGravity(Gravity.CENTER);
         mTextView.setEllipsize(TextUtils.TruncateAt.valueOf("END"));
-        int p = (int) (100 * scale);
         mTextView.setPadding(p, 0, p, 0);
         mTextView.setTextColor(Color.BLACK);
-        addView(mTextView, new LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+//        mTextView.setBackgroundColor(Color.GREEN);
+        mMiddle.addView(mTextView, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
+        //loading
+        p = (int) (12 * scale);
+        mLoading = new TextView(getContext());
+        mLoading.setVisibility(View.GONE);
+        mLoading.setBackground(new LoadingDrawable(getContext()));
+        LayoutParams lParams = new LayoutParams(
+                p, p, Gravity.CENTER | Gravity.RIGHT);
+        mMiddle.addView(mLoading, lParams);
+
+
+        //左边容器
         mLeft = new LinearLayout(getContext());
         mLeft.setOrientation(LinearLayout.HORIZONTAL);
         addView(mLeft, new LayoutParams(
@@ -179,18 +210,14 @@ public class TitleView extends FrameLayout implements View.OnClickListener {
 
         ShapeDrawable list = (ShapeDrawable) mListView.getBackground();
         list.setColor(color);
+
+        ShapeDrawable loading = (ShapeDrawable) mLoading.getBackground();
+        loading.setColor(color);
     }
 
     public void setBottomLineColor(int color) {
         mPaint.setColor(color);
         invalidate();
-    }
-
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-        //画一条线
-//        canvas.drawLine(0, getHeight(), getWidth(), getHeight(), mPaint);
     }
 
     /**
@@ -224,9 +251,9 @@ public class TitleView extends FrameLayout implements View.OnClickListener {
             mMenuView.setVisibility(View.GONE);
         }
         if ((unit & Unit.TEXT) == Unit.TEXT) {
-            mTextView.setVisibility(View.VISIBLE);
+            mMiddle.setVisibility(View.VISIBLE);
         } else {
-            mTextView.setVisibility(View.GONE);
+            mMiddle.setVisibility(View.GONE);
         }
         if ((unit & Unit.SEARCH) == Unit.SEARCH) {
             mSearchView.setVisibility(View.VISIBLE);
@@ -315,6 +342,14 @@ public class TitleView extends FrameLayout implements View.OnClickListener {
 
     private void menu() {
 
+    }
+
+    public void showLoading() {
+        mLoading.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoading() {
+        mLoading.setVisibility(View.GONE);
     }
 
 }
